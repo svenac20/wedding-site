@@ -49,8 +49,6 @@ jobs:
         uses: azure/docker-login@v1
         with:
           login-server: ${{ env.AZURE_CONTAINER_REGISTRY }}
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: Build and push Docker image
         run: |
@@ -67,8 +65,6 @@ jobs:
             containerAppEnvironment: ${{ env.CONTAINER_APP_ENV }}
             imageToDeploy: ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
             registryUrl: ${{ env.AZURE_CONTAINER_REGISTRY }}
-            registryUsername: ${{ secrets.REGISTRY_USERNAME }}
-            registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
             targetPort: 3000
             ingress: external
             environmentVariables: DATABASE_URL=${{ secrets.DATABASE_URL }}
