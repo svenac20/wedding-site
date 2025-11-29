@@ -11,7 +11,6 @@ env:
   IMAGE_NAME: wedding-site
   RESOURCE_GROUP: wedding-rg
   CONTAINER_APP_NAME: wedding-site
-  CONTAINER_APP_ENV: wedding-site-env
 
 jobs:
   build-and-deploy:
@@ -56,13 +55,9 @@ jobs:
           docker push ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
       - name: Deploy to Azure Container Apps
-        uses: azure/container-apps-deploy-action@v1
-        with:
-            resourceGroup: ${{ env.RESOURCE_GROUP }}
-            containerAppName: ${{ env.CONTAINER_APP_NAME }}
-            containerAppEnvironment: ${{ env.CONTAINER_APP_ENV }}
-            imageToDeploy: ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-            registryUrl: ${{ env.AZURE_CONTAINER_REGISTRY }}
-            targetPort: 3000
-            ingress: external
-            environmentVariables: DATABASE_URL=${{ secrets.DATABASE_URL }}
+        run: |
+          az containerapp update \
+            --name ${{ env.CONTAINER_APP_NAME }} \
+            --resource-group ${{ env.RESOURCE_GROUP }} \
+            --image ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+            --set-env-vars DATABASE_URL="${{ secrets.DATABASE_URL }}"
