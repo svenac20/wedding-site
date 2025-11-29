@@ -67,6 +67,8 @@ jobs:
             containerAppEnvironment: ${{ env.CONTAINER_APP_ENV }}
             imageToDeploy: ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
             registryUrl: ${{ env.AZURE_CONTAINER_REGISTRY }}
+            registryUsername: ${{ secrets.REGISTRY_USERNAME }}
+            registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
             targetPort: 3000
             ingress: external
             environmentVariables: DATABASE_URL=${{ secrets.DATABASE_URL }}
