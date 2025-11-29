@@ -32,6 +32,8 @@ jobs:
 
       - name: Generate Prisma Client
         run: npx prisma generate
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
       - name: Run Prisma Migrations
         run: npx prisma migrate deploy
@@ -52,6 +54,7 @@ jobs:
           docker build -t ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:latest .
           docker push ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           docker push ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
       - name: Deploy to Azure Container Apps
         uses: azure/container-apps-deploy-action@v1
         with:
@@ -60,6 +63,6 @@ jobs:
             containerAppEnvironment: ${{ env.CONTAINER_APP_ENV }}
             imageToDeploy: ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
             registryUrl: ${{ env.AZURE_CONTAINER_REGISTRY }}
-            targetPort: 8000
+            targetPort: 3000
             ingress: external
-            environmentVariables:
+            environmentVariables: DATABASE_URL=${{ secrets.DATABASE_URL }}
