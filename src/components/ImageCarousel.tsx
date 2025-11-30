@@ -40,20 +40,6 @@ export default function ImageCarousel({ images, className = "" }: ImageCarouselP
     }
   }, [isAnimating]);
 
-  // Keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft") {
-        goToPrevious();
-      } else if (e.key === "ArrowRight") {
-        goToNext();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [goToPrevious, goToNext]);
-
   const goToIndex = useCallback((index: number) => {
     if (isAnimating || index === currentIndex) return;
     setPreviousIndex(currentIndex);
@@ -89,7 +75,7 @@ export default function ImageCarousel({ images, className = "" }: ImageCarouselP
       </div>
 
       {/* Image Container */}
-      <div className="aspect-[3/4] relative overflow-hidden rounded-lg shadow-2xl transform rotate-2">
+      <div className="aspect-3/4 relative overflow-hidden rounded-lg shadow-2xl transform rotate-2">
         {/* Previous Image (slides out) - only shown during animation */}
         {isAnimating && (
           <div
@@ -137,7 +123,7 @@ export default function ImageCarousel({ images, className = "" }: ImageCarouselP
           <button
             onClick={goToPrevious}
             disabled={isAnimating}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 md:-translate-x-full w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-white/80 hover:text-white disabled:opacity-50 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50 rounded-full cursor-pointer"
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 md:-translate-x-full w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-white hover:text-white disabled:opacity-50 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50 rounded-full cursor-pointer bg-black/30 backdrop-blur-sm shadow-lg"
             aria-label="Previous image"
           >
             <svg
@@ -159,7 +145,7 @@ export default function ImageCarousel({ images, className = "" }: ImageCarouselP
           <button
             onClick={goToNext}
             disabled={isAnimating}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 md:translate-x-full w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-white/80 hover:text-white disabled:opacity-50 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50 rounded-full cursor-pointer"
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 md:translate-x-full w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-white hover:text-white disabled:opacity-50 transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50 rounded-full cursor-pointer bg-black/30 backdrop-blur-sm shadow-lg"
             aria-label="Next image"
           >
             <svg

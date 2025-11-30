@@ -2,6 +2,7 @@
 
 import { useState, useEffect, ReactNode } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 interface HomePageClientProps {
   carouselSlot: ReactNode;
@@ -145,11 +146,12 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
       >
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
-          <div
-            className="w-full h-full bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: `url('https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')`,
-            }}
+          <Image
+            src="https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+            alt="Background image main"
+            fill
+            className="object-cover object-center"
+            priority
           />
           <div className="absolute inset-0 bg-black/20" />
         </div>
@@ -293,12 +295,15 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
       >
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
-          <div
-            className="w-full h-full bg-cover bg-center bg-no-repeat opacity-50"
-            style={{
-              backgroundImage: `url('https://images.unsplash.com/photo-1583939003579-730e3918a45a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80')`,
-            }}
-          />
+          <div className="relative w-full h-full opacity-50">
+            <Image
+                src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
+                alt="Background"
+                fill
+                className="object-cover object-center"
+                priority
+            />
+          </div>
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -371,12 +376,12 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
             {/* Detail Card 1 */}
             <div className="text-center">
-              <div className="w-32 h-40 mx-auto mb-6 relative">
-                <div
-                  className="w-full h-full bg-cover bg-center rounded-lg shadow-lg"
-                  style={{
-                    backgroundImage: `url('https://images.unsplash.com/photo-1469371670807-013ccf25f16a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80')`,
-                  }}
+              <div className="w-32 h-40 mx-auto mb-6 relative rounded-lg shadow-lg overflow-hidden">
+                <Image
+                  src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+                  alt="Dolazak gostiju"
+                  fill
+                  className="object-cover object-center"
                 />
               </div>
               <p
@@ -395,12 +400,12 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
 
             {/* Detail Card 2 */}
             <div className="text-center">
-              <div className="w-32 h-32 mx-auto mb-6 relative">
-                <div
-                  className="w-full h-full bg-cover bg-center rounded-lg shadow-lg"
-                  style={{
-                    backgroundImage: `url('https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80')`,
-                  }}
+              <div className="w-32 h-32 mx-auto mb-6 relative rounded-lg shadow-lg overflow-hidden">
+                <Image
+                  src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+                  alt="Ceremonija"
+                  fill
+                  className="object-cover object-center"
                 />
               </div>
               <p
@@ -419,12 +424,12 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
 
             {/* Detail Card 3 */}
             <div className="text-center">
-              <div className="w-32 h-28 mx-auto mb-6 relative opacity-70">
-                <div
-                  className="w-full h-full bg-cover bg-center rounded-lg shadow-lg"
-                  style={{
-                    backgroundImage: `url('https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80')`,
-                  }}
+              <div className="w-32 h-28 mx-auto mb-6 relative rounded-lg shadow-lg overflow-hidden opacity-70">
+                <Image
+                  src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+                  alt="Koktel"
+                  fill
+                  className="object-cover object-center"
                 />
               </div>
               <p
@@ -443,12 +448,12 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
 
             {/* Detail Card 4 */}
             <div className="text-center">
-              <div className="w-28 h-36 mx-auto mb-6 relative opacity-70">
-                <div
-                  className="w-full h-full bg-cover bg-center rounded-lg shadow-lg"
-                  style={{
-                    backgroundImage: `url('https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80')`,
-                  }}
+              <div className="w-28 h-36 mx-auto mb-6 relative rounded-lg shadow-lg overflow-hidden opacity-70">
+                <Image
+                  src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+                  alt="Večera i zabava"
+                  fill
+                  className="object-cover object-center"
                 />
               </div>
               <p
