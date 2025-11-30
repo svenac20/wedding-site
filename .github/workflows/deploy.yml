@@ -61,6 +61,4 @@ jobs:
             --name ${{ env.CONTAINER_APP_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --image ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
-            --set-env-vars DATABASE_URL="${{ secrets.DATABASE_URL }}"
-            --set-env-vars AZURE_STORAGE_ACCOUNT_NAME="${{ env.STORAGE_ACCOUNT_NAME }}"
-            --set-env-vars AZURE_STORAGE_ACCOUNT_KEY="${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}"
+            --set-env-vars DATABASE_URL="${{ secrets.DATABASE_URL }}" AZURE_STORAGE_ACCOUNT_NAME="${{ env.STORAGE_ACCOUNT_NAME }}" AZURE_STORAGE_ACCOUNT_NAME="${{ env.STORAGE_ACCOUNT_NAME }}"
