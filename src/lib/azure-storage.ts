@@ -1,12 +1,17 @@
 import { BlobServiceClient, StorageSharedKeyCredential, generateBlobSASQueryParameters, BlobSASPermissions } from "@azure/storage-blob";
 
-const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME!;
-const accountKey = process.env.AZURE_STORAGE_ACCOUNT_KEY!;
 const containerName = "home-page-photos";
 
 export async function getHomePagePhotos(): Promise<string[]> {
+  // Read environment variables at runtime, not at module load time
+  const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME;
+  const accountKey = process.env.AZURE_STORAGE_ACCOUNT_KEY;
+  
+  console.log("Azure Storage Account Name:", accountName ? "SET" : "NOT SET");
+  console.log("Azure Storage Account Key:", accountKey ? "SET" : "NOT SET");
+  
   if (!accountName || !accountKey) {
-    console.error("Azure Storage credentials not configured");
+    console.error("Azure Storage credentials not configured - accountName:", accountName, "accountKey:", accountKey ? "[REDACTED]" : "undefined");
     return [];
   }
 
@@ -27,7 +32,19 @@ export async function getHomePagePhotos(): Promise<string[]> {
       // Only include image files
       console.log("Fetching image with name", blob.name);
       if (blob.name.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
-        const blobUrl = `https://${accountName}.blob.core.windows.net/${containerName}/${blob.name}`;
+        // Generate SAS token for each blob (valid for 24 hours)
+        const sasToken = generateBlobSASQueryParameters(
+          {
+            containerName,
+            blobName: blob.name,
+            permissions: BlobSASPermissions.parse("r"), // Read-only
+            startsOn: new Date(),
+            expiresOn: new Date(new Date().valueOf() + 24 * 60 * 60 * 1000), // 24 hours
+          },
+          sharedKeyCredential
+        ).toString();
+
+        const blobUrl = `https://${accountName}.blob.core.windows.net/${containerName}/${blob.name}?${sasToken}`;
         imageUrls.push(blobUrl);
       }
     }
