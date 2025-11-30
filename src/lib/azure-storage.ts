@@ -1,0 +1,41 @@
+import { BlobServiceClient, StorageSharedKeyCredential, generateBlobSASQueryParameters, BlobSASPermissions } from "@azure/storage-blob";
+
+const accountName = process.env.AZURE_STORAGE_ACCOUNT_NAME!;
+const accountKey = process.env.AZURE_STORAGE_ACCOUNT_KEY!;
+const containerName = "home-page-photos";
+
+export async function getHomePagePhotos(): Promise<string[]> {
+  if (!accountName || !accountKey) {
+    console.error("Azure Storage credentials not configured");
+    return [];
+  }
+
+  try {
+    const sharedKeyCredential = new StorageSharedKeyCredential(accountName, accountKey);
+    const blobServiceClient = new BlobServiceClient(
+      `https://${accountName}.blob.core.windows.net`,
+      sharedKeyCredential
+    );
+
+    const containerClient = blobServiceClient.getContainerClient(containerName);
+    
+    const imageUrls: string[] = [];
+    
+    // List all blobs in the container
+    for await (const blob of containerClient.listBlobsFlat()) {
+      // Only include image files
+      if (blob.name.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+        const blobUrl = `https://${accountName}.blob.core.windows.net/${containerName}/${blob.name}`;
+        imageUrls.push(blobUrl);
+      }
+    }
+
+    // Sort images by name for consistent ordering
+    imageUrls.sort();
+
+    return imageUrls;
+  } catch (error) {
+    console.error("Error fetching photos from Azure:", error);
+    return [];
+  }
+}

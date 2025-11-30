@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@azure/storage-blob": "^12.29.1",
     "@prisma/adapter-mariadb": "^7.0.1",
     "@prisma/client": "^7.0.1",
     "mariadb": "^3.4.5",

@@ -4,6 +4,16 @@ const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
   output: "standalone",
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "weddingphotostinasven.blob.core.windows.net",
+        port: "",
+        pathname: "/home-page-photos/**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
