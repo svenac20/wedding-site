@@ -11,6 +11,7 @@ env:
   IMAGE_NAME: wedding-site
   RESOURCE_GROUP: wedding-rg
   CONTAINER_APP_NAME: wedding-site
+  STORAGE_ACCOUNT_NAME: weddingphotostinasven
 
 jobs:
   build-and-deploy:
@@ -61,3 +62,5 @@ jobs:
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --image ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
             --set-env-vars DATABASE_URL="${{ secrets.DATABASE_URL }}"
+            --set-env-vars AZURE_STORAGE_ACCOUNT_NAME="${{ env.STORAGE_ACCOUNT_NAME }}"
+            --set-env-vars AZURE_STORAGE_ACCOUNT_KEY="${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}"
