@@ -136,3 +136,56 @@ h1, h2, h3, h4, h5, h6 {
 .delay-500 {
   animation-delay: 0.5s;
 }
+
+/* Slide animations for image carousel */
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.animate-slide-in-from-right {
+  animation: slideInFromRight 0.4s ease-in-out forwards;
+}
+
+.animate-slide-in-from-left {
+  animation: slideInFromLeft 0.4s ease-in-out forwards;
+}
+
+.animate-slide-out-left {
+  animation: slideOutLeft 0.4s ease-in-out forwards;
+}
+
+.animate-slide-out-right {
+  animation: slideOutRight 0.4s ease-in-out forwards;
+}
