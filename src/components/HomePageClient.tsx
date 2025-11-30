@@ -376,7 +376,7 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
             {/* Detail Card 1 */}
             <div className="text-center">
-              <div className="w-32 h-40 mx-auto mb-6 relative rounded-lg shadow-lg overflow-hidden">
+              <div className="w-36 h-48 mx-auto mb-6 relative rounded-lg shadow-lg overflow-hidden">
                 <Image
                   src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
                   alt="Dolazak gostiju"
@@ -400,7 +400,7 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
 
             {/* Detail Card 2 */}
             <div className="text-center">
-              <div className="w-32 h-32 mx-auto mb-6 relative rounded-lg shadow-lg overflow-hidden">
+              <div className="w-36 h-48 mx-auto mb-6 relative rounded-lg shadow-lg overflow-hidden">
                 <Image
                   src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
                   alt="Ceremonija"
@@ -424,7 +424,7 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
 
             {/* Detail Card 3 */}
             <div className="text-center">
-              <div className="w-32 h-28 mx-auto mb-6 relative rounded-lg shadow-lg overflow-hidden opacity-70">
+              <div className="w-36 h-48 mx-auto mb-6 relative rounded-lg shadow-lg overflow-hidden">
                 <Image
                   src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
                   alt="Koktel"
@@ -448,7 +448,7 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
 
             {/* Detail Card 4 */}
             <div className="text-center">
-              <div className="w-28 h-36 mx-auto mb-6 relative rounded-lg shadow-lg overflow-hidden opacity-70">
+              <div className="w-36 h-48 mx-auto mb-6 relative rounded-lg shadow-lg overflow-hidden">
                 <Image
                   src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
                   alt="Večera i zabava"
