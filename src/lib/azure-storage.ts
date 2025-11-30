@@ -33,18 +33,7 @@ export async function getHomePagePhotos(): Promise<string[]> {
       console.log("Fetching image with name", blob.name);
       if (blob.name.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
         // Generate SAS token for each blob (valid for 24 hours)
-        const sasToken = generateBlobSASQueryParameters(
-          {
-            containerName,
-            blobName: blob.name,
-            permissions: BlobSASPermissions.parse("r"), // Read-only
-            startsOn: new Date(),
-            expiresOn: new Date(new Date().valueOf() + 24 * 60 * 60 * 1000), // 24 hours
-          },
-          sharedKeyCredential
-        ).toString();
-
-        const blobUrl = `https://${accountName}.blob.core.windows.net/${containerName}/${blob.name}?${sasToken}`;
+        const blobUrl = `https://${accountName}.blob.core.windows.net/${containerName}/${blob.name}`;
         imageUrls.push(blobUrl);
       }
     }
