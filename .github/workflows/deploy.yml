@@ -55,15 +55,13 @@ jobs:
           docker push ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
           docker push ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
-      - name: Prepare environment variables file
-        run: |
-          sed -i 's|PLACEHOLDER_DATABASE_URL|${{ secrets.DATABASE_URL }}|g' .azure/container-app-env.yaml
-          sed -i 's|PLACEHOLDER_STORAGE_KEY|${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}|g' .azure/container-app-env.yaml
-
       - name: Deploy to Azure Container Apps
         run: |
           az containerapp update \
             --name ${{ env.CONTAINER_APP_NAME }} \
             --resource-group ${{ env.RESOURCE_GROUP }} \
             --image ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
-            --set-env-vars-from-file .azure/container-app-env.yaml
+            --set-env-vars \
+              DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+              AZURE_STORAGE_ACCOUNT_NAME="${{ env.STORAGE_ACCOUNT_NAME }}" \
+              AZURE_STORAGE_ACCOUNT_KEY="${{ secrets.AZURE_STORAGE_ACCOUNT_KEY  }}"
