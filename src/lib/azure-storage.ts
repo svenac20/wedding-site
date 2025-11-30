@@ -18,12 +18,14 @@ export async function getHomePagePhotos(): Promise<string[]> {
     );
 
     const containerClient = blobServiceClient.getContainerClient(containerName);
+    console.log("Fetrching photos from Azure container:", containerName);
     
     const imageUrls: string[] = [];
     
     // List all blobs in the container
     for await (const blob of containerClient.listBlobsFlat()) {
       // Only include image files
+      console.log("Fetching image with name", blob.name);
       if (blob.name.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
         const blobUrl = `https://${accountName}.blob.core.windows.net/${containerName}/${blob.name}`;
         imageUrls.push(blobUrl);
