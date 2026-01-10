@@ -45,19 +45,10 @@ export default function ImageCarousel({ images, className = "" }: ImageCarouselP
 
   return (
     <div className={`relative ${className}`}>
-      {/* Preload all images - hidden but loaded */}
-      <div className="hidden">
-        {images.map((src, index) => (
-          <Image
-            key={`preload-${index}`}
-            src={src}
-            alt=""
-            width={1}
-            height={1}
-            priority
-          />
-        ))}
-      </div>
+      {/* Preload all images using link preload */}
+      {images.map((src) => (
+        <link key={`preload-${src}`} rel="preload" as="image" href={src} />
+      ))}
 
       {/* Image Container */}
       <div className="aspect-3/4 relative overflow-hidden rounded-lg shadow-2xl transform rotate-2">
@@ -71,6 +62,7 @@ export default function ImageCarousel({ images, className = "" }: ImageCarouselP
             alt={`Photo ${currentIndex + 1}`}
             fill
             priority
+            unoptimized
             className="object-cover"
             sizes="(max-width: 768px) 100vw, 50vw"
           />
