@@ -1,11 +1,15 @@
-import { getHomePagePhotos } from "@/lib/azure-storage";
 import ImageCarousel from "./ImageCarousel";
 
-export const dynamic = "force-dynamic";
+// List of images in the public/home-page folder
+const homePageImages = [
+  "/home-page/cave.jpg",
+  "/home-page/plitvice.jpg",
+  "/home-page/prague-funny.jpg",
+  "/home-page/vienna-concert.jpg",
+  "/home-page/vienna.jpg",
+  "/home-page/wedding.jpg",
+];
 
-export default async function HomePageCarousel() {
-
-  const images = await getHomePagePhotos();
-  
-  return <ImageCarousel images={images} />;
+export default function HomePageCarousel() {
+  return <ImageCarousel images={homePageImages} />;
 }

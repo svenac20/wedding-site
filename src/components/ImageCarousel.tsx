@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import Image from "next/image";
 
 interface ImageCarouselProps {
@@ -10,48 +10,33 @@ interface ImageCarouselProps {
 
 export default function ImageCarousel({ images, className = "" }: ImageCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [previousIndex, setPreviousIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [slideDirection, setSlideDirection] = useState<"left" | "right">("left");
 
   const goToPrevious = useCallback(() => {
     if (images.length === 0 || isAnimating) return;
-    setPreviousIndex(currentIndex);
-    setSlideDirection("right");
     setIsAnimating(true);
-    setCurrentIndex(currentIndex === 0 ? images.length - 1 : currentIndex - 1);
-  }, [images.length, currentIndex, isAnimating]);
+    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    setTimeout(() => setIsAnimating(false), 500);
+  }, [images.length, isAnimating]);
 
   const goToNext = useCallback(() => {
     if (images.length === 0 || isAnimating) return;
-    setPreviousIndex(currentIndex);
-    setSlideDirection("left");
     setIsAnimating(true);
-    setCurrentIndex(currentIndex === images.length - 1 ? 0 : currentIndex + 1);
-  }, [images.length, currentIndex, isAnimating]);
-
-  // Handle animation end
-  useEffect(() => {
-    if (isAnimating) {
-      const timer = setTimeout(() => {
-        setIsAnimating(false);
-      }, 400);
-      return () => clearTimeout(timer);
-    }
-  }, [isAnimating]);
+    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    setTimeout(() => setIsAnimating(false), 500);
+  }, [images.length, isAnimating]);
 
   const goToIndex = useCallback((index: number) => {
     if (isAnimating || index === currentIndex) return;
-    setPreviousIndex(currentIndex);
-    setSlideDirection(index > currentIndex ? "left" : "right");
     setIsAnimating(true);
     setCurrentIndex(index);
+    setTimeout(() => setIsAnimating(false), 500);
   }, [currentIndex, isAnimating]);
 
   if (images.length === 0) {
     return (
       <div className={`relative ${className}`}>
-        <div className="aspect-[3/4] bg-gray-200 rounded-lg shadow-2xl flex items-center justify-center">
+        <div className="aspect-3/4 bg-gray-200 rounded-lg shadow-2xl flex items-center justify-center">
           <p className="text-gray-500 text-center px-4">No images available</p>
         </div>
       </div>
@@ -76,40 +61,16 @@ export default function ImageCarousel({ images, className = "" }: ImageCarouselP
 
       {/* Image Container */}
       <div className="aspect-3/4 relative overflow-hidden rounded-lg shadow-2xl transform rotate-2">
-        {/* Previous Image (slides out) - only shown during animation */}
-        {isAnimating && (
-          <div
-            className={`absolute inset-0 ${
-              slideDirection === "left"
-                ? "animate-slide-out-left"
-                : "animate-slide-out-right"
-            }`}
-          >
-            <Image
-              src={images[previousIndex]}
-              alt={`Photo ${previousIndex + 1}`}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
-          </div>
-        )}
-        
-        {/* Current Image */}
+        {/* Current Image with fade animation */}
         <div
-          className={`absolute inset-0 ${
-            isAnimating
-              ? slideDirection === "left"
-                ? "animate-slide-in-from-right"
-                : "animate-slide-in-from-left"
-              : ""
-          }`}
+          key={currentIndex}
+          className="absolute inset-0 animate-fade-in"
         >
           <Image
             src={images[currentIndex]}
             alt={`Photo ${currentIndex + 1}`}
             fill
-            priority={currentIndex === 0}
+            priority
             className="object-cover"
             sizes="(max-width: 768px) 100vw, 50vw"
           />
