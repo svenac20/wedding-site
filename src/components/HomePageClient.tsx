@@ -3,6 +3,7 @@
 import { useState, useEffect, ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import RSVPForm from "./RSVPForm";
 
 interface HomePageClientProps {
   carouselSlot: ReactNode;
@@ -478,26 +479,20 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
         id="rsvp"
         className="relative py-20 md:py-32 bg-[#f7ebe9]"
       >
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2
-            className="text-[#304254] text-4xl sm:text-5xl md:text-6xl font-normal uppercase tracking-wide mb-8"
+            className="text-[#304254] text-4xl sm:text-5xl md:text-6xl font-normal uppercase tracking-wide mb-8 text-center"
             style={{ fontFamily: "var(--font-cormorant)" }}
           >
             Potvrdite Dolazak
           </h2>
           <p
-            className="text-[#304254]/70 text-lg mb-12"
+            className="text-[#304254]/70 text-lg mb-12 text-center"
             style={{ fontFamily: "var(--font-montserrat)" }}
           >
             Molimo vas da potvrdite svoj dolazak do 1. ožujka 2027.
           </p>
-          <Link
-            href="#contact"
-            className="inline-block bg-[#a0bdca] text-white px-12 py-4 rounded-full text-lg font-medium hover:bg-[#8badb9] transition-colors"
-            style={{ fontFamily: "var(--font-montserrat)" }}
-          >
-            RSVP
-          </Link>
+          <RSVPForm />
         </div>
       </section>
 
