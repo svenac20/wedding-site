@@ -18,24 +18,21 @@ enum GuestOf {
   TINA
 }
 
-model Group {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-  users     User[]
+enum RSVPStatus {
+  PENDING
+  ATTENDING
+  NOT_ATTENDING
 }
 
-model User {
+model Guest {
   id               Int      @id @default(autoincrement())
   name             String
   surname          String
-  email            String   @unique
+  email            String?   @unique
   drinkPreferences String?  @db.Text
   otherRequests    String?  @db.Text
   guestOf          GuestOf
-  groupId          Int
-  group            Group    @relation(fields: [groupId], references: [id])
+  rsvpStatus       RSVPStatus @default(PENDING)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @default(now()) @updatedAt
 }
