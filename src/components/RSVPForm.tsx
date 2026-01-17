@@ -53,6 +53,14 @@ export default function RSVPForm() {
   const [availableGuests, setAvailableGuests] = useState<Guest[]>([]);
   const [isGuestDropdownOpen, setIsGuestDropdownOpen] = useState(false);
   const [isDrinkDropdownOpen, setIsDrinkDropdownOpen] = useState(false);
+  const [guestSearch, setGuestSearch] = useState("");
+
+  // Filter guests based on search
+  const filteredGuests = availableGuests.filter((guest) => {
+    const searchLower = guestSearch.toLowerCase();
+    const fullName = `${guest.name} ${guest.surname}`.toLowerCase();
+    return fullName.includes(searchLower);
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
@@ -258,7 +266,7 @@ export default function RSVPForm() {
           <button
             type="button"
             onClick={() => setIsDrinkDropdownOpen(!isDrinkDropdownOpen)}
-            className="w-full px-4 py-3 rounded-lg border border-[#304254]/20 bg-white text-[#304254] focus:outline-none focus:ring-2 focus:ring-[#a0bdca] focus:border-transparent transition-all text-left flex items-center justify-between"
+            className="w-full px-4 py-3 rounded-lg border border-[#304254]/20 bg-white text-[#304254] focus:outline-none focus:ring-2 focus:ring-[#a0bdca] focus:border-transparent transition-all text-left flex items-center justify-between cursor-pointer"
             style={{ fontFamily: "var(--font-montserrat)" }}
           >
             <span className={formData.drinkPreferences.length === 0 ? "text-[#304254]/50" : ""}>
@@ -375,18 +383,18 @@ export default function RSVPForm() {
 
       {/* Multi-select Dropdown for Other Guests */}
       {formData.confirmingForOthers && (
-        <div className="animate-fade-in">
+        <div className="animate-fade-in relative z-[100]">
           <label
             className="block text-[#304254] text-sm font-medium mb-2"
             style={{ fontFamily: "var(--font-montserrat)" }}
           >
             Odaberite osobe za koje potvrđujete dolazak
           </label>
-          <div className="relative">
+          <div className="relative z-[100]">
             <button
               type="button"
               onClick={() => setIsGuestDropdownOpen(!isGuestDropdownOpen)}
-              className="w-full px-4 py-3 rounded-lg border border-[#304254]/20 bg-white text-[#304254] focus:outline-none focus:ring-2 focus:ring-[#a0bdca] focus:border-transparent transition-all text-left flex items-center justify-between"
+              className="w-full px-4 py-3 rounded-lg border border-[#304254]/20 bg-white text-[#304254] focus:outline-none focus:ring-2 focus:ring-[#a0bdca] focus:border-transparent transition-all text-left flex items-center justify-between cursor-pointer"
               style={{ fontFamily: "var(--font-montserrat)" }}
             >
               <span className={formData.selectedGuests.length === 0 ? "text-[#304254]/50" : ""}>
@@ -405,35 +413,57 @@ export default function RSVPForm() {
             </button>
 
             {isGuestDropdownOpen && (
-              <div className="absolute z-10 w-full mt-1 bg-white border border-[#304254]/20 rounded-lg shadow-lg max-h-60 overflow-y-auto">
-                {availableGuests.length === 0 ? (
-                  <div
-                    className="px-4 py-3 text-[#304254]/50 text-sm"
+              <div className="absolute z-50 w-full mt-1 bg-white border border-[#304254]/20 rounded-lg shadow-lg">
+                {/* Search Input */}
+                <div className="p-2 border-b border-[#304254]/10">
+                  <input
+                    type="text"
+                    value={guestSearch}
+                    onChange={(e) => setGuestSearch(e.target.value)}
+                    placeholder="Pretraži goste..."
+                    className="w-full px-3 py-2 rounded-md border border-[#304254]/20 bg-white text-[#304254] text-sm focus:outline-none focus:ring-2 focus:ring-[#a0bdca] focus:border-transparent"
                     style={{ fontFamily: "var(--font-montserrat)" }}
-                  >
-                    Nema dostupnih gostiju
-                  </div>
-                ) : (
-                  availableGuests.map((guest) => (
-                    <label
-                      key={guest.id}
-                      className="flex items-center px-4 py-3 hover:bg-[#f7ebe9] cursor-pointer transition-colors"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                </div>
+                {/* Guest List */}
+                <div className="max-h-48 overflow-y-auto z-50">
+                  {availableGuests.length === 0 ? (
+                    <div
+                      className="px-4 py-3 text-[#304254]/50 text-sm"
+                      style={{ fontFamily: "var(--font-montserrat)" }}
                     >
-                      <input
-                        type="checkbox"
-                        checked={formData.selectedGuests.includes(guest.id)}
-                        onChange={() => toggleGuestSelection(guest.id)}
-                        className="w-4 h-4 rounded border-[#304254]/20 text-[#a0bdca] focus:ring-[#a0bdca]"
-                      />
-                      <span
-                        className="ml-3 text-[#304254] text-sm"
-                        style={{ fontFamily: "var(--font-montserrat)" }}
+                      Nema dostupnih gostiju
+                    </div>
+                  ) : filteredGuests.length === 0 ? (
+                    <div
+                      className="px-4 py-3 text-[#304254]/50 text-sm"
+                      style={{ fontFamily: "var(--font-montserrat)" }}
+                    >
+                      Nema rezultata za "{guestSearch}"
+                    </div>
+                  ) : (
+                    filteredGuests.map((guest) => (
+                      <label
+                        key={guest.id}
+                        className="flex items-center px-4 py-3 hover:bg-[#f7ebe9] cursor-pointer transition-colors"
                       >
-                        {guest.name} {guest.surname}
-                      </span>
-                    </label>
-                  ))
-                )}
+                        <input
+                          type="checkbox"
+                          checked={formData.selectedGuests.includes(guest.id)}
+                          onChange={() => toggleGuestSelection(guest.id)}
+                          className="w-4 h-4 rounded border-[#304254]/20 text-[#a0bdca] focus:ring-[#a0bdca]"
+                        />
+                        <span
+                          className="ml-3 text-[#304254] text-sm"
+                          style={{ fontFamily: "var(--font-montserrat)" }}
+                        >
+                          {guest.name} {guest.surname}
+                        </span>
+                      </label>
+                    ))
+                  )}
+                </div>
               </div>
             )}
           </div>
@@ -466,7 +496,7 @@ export default function RSVPForm() {
       <button
         type="submit"
         disabled={isSubmitting || !formData.name.trim() || !formData.surname.trim() || !formData.email.trim()}
-        className={`w-full text-white px-8 py-4 rounded-full text-lg font-medium transition-colors ${
+        className={`relative z-10 w-full text-white px-8 py-4 rounded-full text-lg font-medium transition-colors ${
           isSubmitting || !formData.name.trim() || !formData.surname.trim() || !formData.email.trim()
             ? "bg-[#a0bdca] opacity-50 cursor-not-allowed"
             : "bg-[#5b8fa8] hover:bg-[#4a7a91] cursor-pointer"
