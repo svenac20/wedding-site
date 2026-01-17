@@ -12,3 +12,30 @@ generator client {
 datasource db {
   provider = "mysql"
 }
+
+enum GuestOf {
+  SVEN
+  TINA
+}
+
+model Group {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  users     User[]
+}
+
+model User {
+  id               Int      @id @default(autoincrement())
+  name             String
+  surname          String
+  email            String   @unique
+  drinkPreferences String?  @db.Text
+  otherRequests    String?  @db.Text
+  guestOf          GuestOf
+  groupId          Int
+  group            Group    @relation(fields: [groupId], references: [id])
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @default(now()) @updatedAt
+}
