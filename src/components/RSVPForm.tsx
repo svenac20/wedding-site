@@ -48,6 +48,7 @@ export default function RSVPForm() {
     otherPreferences: "",
     confirmingForOthers: false,
     selectedGuests: [] as number[],
+    guestDetails: {} as Record<number, { drinkPreferences: string[]; otherDrink: string; email: string }>,
   });
 
   const [availableGuests, setAvailableGuests] = useState<Guest[]>([]);
@@ -128,11 +129,74 @@ export default function RSVPForm() {
   };
 
   const toggleGuestSelection = (guestId: number) => {
+    setFormData((prev) => {
+      const isSelected = prev.selectedGuests.includes(guestId);
+      const newSelectedGuests = isSelected
+        ? prev.selectedGuests.filter((id) => id !== guestId)
+        : [...prev.selectedGuests, guestId];
+      
+      const newGuestDetails = { ...prev.guestDetails };
+      if (isSelected) {
+        delete newGuestDetails[guestId];
+      } else {
+        newGuestDetails[guestId] = { drinkPreferences: [], otherDrink: "", email: "" };
+      }
+      
+      return {
+        ...prev,
+        selectedGuests: newSelectedGuests,
+        guestDetails: newGuestDetails,
+      };
+    });
+  };
+
+  const toggleGuestDrinkSelection = (guestId: number, drinkValue: string) => {
+    setFormData((prev) => {
+      const guestDetail = prev.guestDetails[guestId] || { drinkPreferences: [], otherDrink: "", email: "" };
+      const newDrinks = guestDetail.drinkPreferences.includes(drinkValue)
+        ? guestDetail.drinkPreferences.filter((d) => d !== drinkValue)
+        : [...guestDetail.drinkPreferences, drinkValue];
+      
+      const otherDrink = !newDrinks.includes("other") ? "" : guestDetail.otherDrink;
+      
+      return {
+        ...prev,
+        guestDetails: {
+          ...prev.guestDetails,
+          [guestId]: { ...guestDetail, drinkPreferences: newDrinks, otherDrink },
+        },
+      };
+    });
+  };
+
+  const updateGuestDetail = (guestId: number, field: "otherDrink" | "email", value: string) => {
     setFormData((prev) => ({
       ...prev,
-      selectedGuests: prev.selectedGuests.includes(guestId)
-        ? prev.selectedGuests.filter((id) => id !== guestId)
-        : [...prev.selectedGuests, guestId],
+      guestDetails: {
+        ...prev.guestDetails,
+        [guestId]: { ...prev.guestDetails[guestId], [field]: value },
+      },
+    }));
+  };
+
+  const getGuestDrinkLabels = (guestId: number) => {
+    const guestDetail = formData.guestDetails[guestId];
+    if (!guestDetail) return "";
+    return guestDetail.drinkPreferences
+      .map((value) => {
+        if (value === "other") return guestDetail.otherDrink || "Ostalo";
+        const option = DRINK_OPTIONS.find((o) => o.value === value);
+        return option?.label || value;
+      })
+      .join(", ");
+  };
+
+  const [openGuestDrinkDropdowns, setOpenGuestDrinkDropdowns] = useState<Record<number, boolean>>({});
+
+  const toggleGuestDrinkDropdown = (guestId: number) => {
+    setOpenGuestDrinkDropdowns((prev) => ({
+      ...prev,
+      [guestId]: !prev[guestId],
     }));
   };
 
@@ -168,7 +232,9 @@ export default function RSVPForm() {
           otherPreferences: "",
           confirmingForOthers: false,
           selectedGuests: [],
+          guestDetails: {},
         });
+        setOpenGuestDrinkDropdowns({});
       } else {
         setSubmitMessage({ type: "error", text: result.message });
       }
@@ -474,6 +540,132 @@ export default function RSVPForm() {
             >
               Odabrano: {formData.selectedGuests.length} {formData.selectedGuests.length === 1 ? "osoba" : "osobe"}
             </p>
+          )}
+
+          {/* Per-guest drink selection and email */}
+          {formData.selectedGuests.length > 0 && (
+            <div className="mt-6 space-y-6">
+              <p
+                className="text-[#304254] text-sm font-medium"
+                style={{ fontFamily: "var(--font-montserrat)" }}
+              >
+                Unesite preferencije za svaku odabranu osobu:
+              </p>
+              {formData.selectedGuests.map((guestId) => {
+                const guest = availableGuests.find((g) => g.id === guestId);
+                if (!guest) return null;
+                const guestDetail = formData.guestDetails[guestId] || { drinkPreferences: [], otherDrink: "", email: "" };
+                const isDropdownOpen = openGuestDrinkDropdowns[guestId] || false;
+
+                return (
+                  <div
+                    key={guestId}
+                    className="p-4 bg-white/50 rounded-lg border border-[#304254]/10 space-y-4"
+                  >
+                    <h4
+                      className="text-[#304254] font-medium"
+                      style={{ fontFamily: "var(--font-montserrat)" }}
+                    >
+                      {guest.name} {guest.surname}
+                    </h4>
+
+                    {/* Guest Drink Selection */}
+                    <div>
+                      <label
+                        className="block text-[#304254] text-sm font-medium mb-2"
+                        style={{ fontFamily: "var(--font-montserrat)" }}
+                      >
+                        Preferirana pića
+                      </label>
+                      <div className="relative">
+                        <button
+                          type="button"
+                          onClick={() => toggleGuestDrinkDropdown(guestId)}
+                          className="w-full px-4 py-3 rounded-lg border border-[#304254]/20 bg-white text-[#304254] focus:outline-none focus:ring-2 focus:ring-[#a0bdca] focus:border-transparent transition-all text-left flex items-center justify-between cursor-pointer"
+                          style={{ fontFamily: "var(--font-montserrat)" }}
+                        >
+                          <span className={guestDetail.drinkPreferences.length === 0 ? "text-[#304254]/50" : ""}>
+                            {guestDetail.drinkPreferences.length === 0
+                              ? "Odaberite pića..."
+                              : getGuestDrinkLabels(guestId)}
+                          </span>
+                          <svg
+                            className={`w-5 h-5 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </button>
+
+                        {isDropdownOpen && (
+                          <div className="absolute z-[200] w-full mt-1 bg-white border border-[#304254]/20 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                            {DRINK_OPTIONS.map((option) => (
+                              <label
+                                key={option.value}
+                                className="flex items-center px-4 py-3 hover:bg-[#f7ebe9] cursor-pointer transition-colors"
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={guestDetail.drinkPreferences.includes(option.value)}
+                                  onChange={() => toggleGuestDrinkSelection(guestId, option.value)}
+                                  className="w-4 h-4 rounded border-[#304254]/20 text-[#a0bdca] focus:ring-[#a0bdca]"
+                                />
+                                <span
+                                  className="ml-3 text-[#304254] text-sm"
+                                  style={{ fontFamily: "var(--font-montserrat)" }}
+                                >
+                                  {option.label}
+                                </span>
+                              </label>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Guest Other Drink Input */}
+                    {guestDetail.drinkPreferences.includes("other") && (
+                      <div className="animate-fade-in">
+                        <label
+                          className="block text-[#304254] text-sm font-medium mb-2"
+                          style={{ fontFamily: "var(--font-montserrat)" }}
+                        >
+                          Navedite željeno piće
+                        </label>
+                        <input
+                          type="text"
+                          value={guestDetail.otherDrink}
+                          onChange={(e) => updateGuestDetail(guestId, "otherDrink", e.target.value)}
+                          className="w-full px-4 py-3 rounded-lg border border-[#304254]/20 bg-white text-[#304254] focus:outline-none focus:ring-2 focus:ring-[#a0bdca] focus:border-transparent transition-all"
+                          style={{ fontFamily: "var(--font-montserrat)" }}
+                          placeholder="Unesite željeno piće..."
+                        />
+                      </div>
+                    )}
+
+                    {/* Guest Email (Optional) */}
+                    <div>
+                      <label
+                        className="block text-[#304254] text-sm font-medium mb-2"
+                        style={{ fontFamily: "var(--font-montserrat)" }}
+                      >
+                        Email (opcionalno)
+                      </label>
+                      <input
+                        type="email"
+                        value={guestDetail.email}
+                        onChange={(e) => updateGuestDetail(guestId, "email", e.target.value)}
+                        className="w-full px-4 py-3 rounded-lg border border-[#304254]/20 bg-white text-[#304254] focus:outline-none focus:ring-2 focus:ring-[#a0bdca] focus:border-transparent transition-all"
+                        style={{ fontFamily: "var(--font-montserrat)" }}
+                        placeholder="email@primjer.com"
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           )}
         </div>
       )}
