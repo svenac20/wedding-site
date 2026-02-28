@@ -56,9 +56,7 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
     { name: "Raspored", href: "#raspored" },
     { name: "FAQ", href: "#faq" },
     { name: "Potvrdite Dolazak", href: "#rsvp" },
-    { name: "Accommodations", href: "#accommodations" },
     { name: "Contact", href: "#contact" },
-    { name: "About", href: "#about" },
   ];
 
   return (

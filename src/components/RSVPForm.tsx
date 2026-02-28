@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { submitRSVP, getGuests } from "@/app/actions/rsvp";
+import { ToastContainer, useToast } from "./Toast";
 
 interface Guest {
   id: number;
@@ -63,7 +64,7 @@ export default function RSVPForm() {
     return fullName.includes(searchLower);
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const { messages: toastMessages, showToast, closeToast } = useToast();
 
   // Fetch available guests when checkbox is checked
   useEffect(() => {
@@ -203,7 +204,6 @@ export default function RSVPForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setSubmitMessage(null);
 
     try {
       // Build drink preference string from selections
@@ -216,13 +216,34 @@ export default function RSVPForm() {
         .filter(Boolean)
         .join(", ");
 
+      // Build per-guest drink preferences for additional guests
+      const guestDetailsList = formData.selectedGuests.map((guestId) => {
+        const detail = formData.guestDetails[guestId];
+        const guestDrinkPref = detail
+          ? detail.drinkPreferences
+              .map((value) => {
+                if (value === "other") return detail.otherDrink;
+                const option = DRINK_OPTIONS.find((o) => o.value === value);
+                return option?.label || value;
+              })
+              .filter(Boolean)
+              .join(", ")
+          : "";
+        return {
+          id: guestId,
+          drinkPreference: guestDrinkPref,
+          email: detail?.email || "",
+        };
+      });
+
       const result = await submitRSVP({
         ...formData,
         drinkPreference,
+        guestDetailsList,
       });
 
       if (result.success) {
-        setSubmitMessage({ type: "success", text: result.message });
+        showToast("success", result.message);
         setFormData({
           name: "",
           surname: "",
@@ -236,10 +257,10 @@ export default function RSVPForm() {
         });
         setOpenGuestDrinkDropdowns({});
       } else {
-        setSubmitMessage({ type: "error", text: result.message });
+        showToast("error", result.message);
       }
     } catch (error) {
-      setSubmitMessage({ type: "error", text: "Došlo je do greške. Molimo pokušajte ponovno." });
+      showToast("error", "Došlo je do greške. Molimo pokušajte ponovno.");
     } finally {
       setIsSubmitting(false);
     }
@@ -670,19 +691,8 @@ export default function RSVPForm() {
         </div>
       )}
 
-      {/* Submit Message */}
-      {submitMessage && (
-        <div
-          className={`p-4 rounded-lg ${
-            submitMessage.type === "success"
-              ? "bg-green-100 text-green-800"
-              : "bg-red-100 text-red-800"
-          }`}
-          style={{ fontFamily: "var(--font-montserrat)" }}
-        >
-          {submitMessage.text}
-        </div>
-      )}
+      {/* Toast Container */}
+      <ToastContainer messages={toastMessages} onClose={closeToast} />
 
       {/* Submit Button */}
       <button
