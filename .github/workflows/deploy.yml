@@ -63,7 +63,5 @@ jobs:
             --image ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
             --set-env-vars \
               DATABASE_URL="${{ secrets.DATABASE_URL }}" \
-              AZURE_STORAGE_ACCOUNT_NAME="${{ env.STORAGE_ACCOUNT_NAME }}" \
-              AZURE_STORAGE_ACCOUNT_KEY="${{ secrets.AZURE_STORAGE_ACCOUNT_KEY  }}"
-              AZURE_COMMUNICATION_CONNECTION_STRING="${{ secrets.AZURE_COMMUNICATION_CONNECTION_STRING }}"
+              AZURE_COMMUNICATION_CONNECTION_STRING="${{ secrets.AZURE_COMMUNICATION_CONNECTION_STRING }}" \
               EMAIL_SENDER_ADDRESS="${{ secrets.EMAIL_SENDER_ADDRESS }}"
