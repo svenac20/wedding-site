@@ -59,7 +59,7 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
     { name: "Home", href: "#home" },
     { name: "Raspored", href: "#raspored" },
     { name: "Potvrdite Dolazak", href: "#rsvp" },
-    { name: "Contact", href: "#contact" },
+    { name: "Kontakt", href: "#kontakt" },
   ];
 
   return (
