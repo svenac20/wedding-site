@@ -51,10 +51,24 @@ export async function submitRSVP(data: RSVPData): Promise<RSVPResult> {
       };
     }
 
-    // Check if guest already exists by email
-    const existingGuest = await prisma.guest.findUnique({
-      where: { email: data.email },
-    });
+    // Check if guest already exists. Match by name + surname using a
+    // case- and accent-insensitive collation (utf8mb4_unicode_ci) so that
+    // user input like "sven scekic" matches a stored "Sven Šćekić".
+    // Fall back to matching by email if no name match is found.
+    const trimmedName = data.name.trim();
+    const trimmedSurname = data.surname.trim();
+
+    const matchedByName = await prisma.$queryRaw<Array<{ id: number }>>`
+      SELECT id FROM Guest
+      WHERE name COLLATE utf8mb4_unicode_ci = ${trimmedName}
+        AND surname COLLATE utf8mb4_unicode_ci = ${trimmedSurname}
+      LIMIT 1
+    `;
+
+    const existingGuest =
+      matchedByName.length > 0
+        ? await prisma.guest.findUnique({ where: { id: matchedByName[0].id } })
+        : await prisma.guest.findUnique({ where: { email: data.email } });
 
     let primaryGuest: {
       name: string;
@@ -65,10 +79,13 @@ export async function submitRSVP(data: RSVPData): Promise<RSVPResult> {
     };
 
     if (existingGuest) {
-      // Update existing guest's preferences and mark as attending
+      // Update existing guest's preferences and mark as attending.
+      // Preserve the stored (properly-accented) name/surname; only update
+      // email if the incoming address differs from what's already stored.
       primaryGuest = await prisma.guest.update({
-        where: { email: data.email },
+        where: { id: existingGuest.id },
         data: {
+          email: data.email,
           drinkPreferences: data.drinkPreference || null,
           otherRequests: data.otherPreferences || null,
           rsvpStatus: "ATTENDING",

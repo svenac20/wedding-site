@@ -57,11 +57,23 @@ export default function RSVPForm() {
   const [isDrinkDropdownOpen, setIsDrinkDropdownOpen] = useState(false);
   const [guestSearch, setGuestSearch] = useState("");
 
-  // Filter guests based on search
+  // Normalize Croatian special characters for comparison
+  const normalizeCroatian = (str: string) =>
+    str
+      .toLowerCase()
+      .replace(/[čć]/g, "c")
+      .replace(/š/g, "s")
+      .replace(/đ/g, "d")
+      .replace(/ž/g, "z");
+
+  // Filter guests based on search and exclude the current user
   const filteredGuests = availableGuests.filter((guest) => {
-    const searchLower = guestSearch.toLowerCase();
-    const fullName = `${guest.name} ${guest.surname}`.toLowerCase();
-    return fullName.includes(searchLower);
+    const normalizedFullName = normalizeCroatian(`${guest.name} ${guest.surname}`);
+    const normalizedSearch = normalizeCroatian(guestSearch);
+    const isCurrentUser =
+      normalizeCroatian(guest.name) === normalizeCroatian(formData.name.trim()) &&
+      normalizeCroatian(guest.surname) === normalizeCroatian(formData.surname.trim());
+    return normalizedFullName.includes(normalizedSearch) && !isCurrentUser;
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { messages: toastMessages, showToast, closeToast } = useToast();

@@ -4,6 +4,7 @@ import { useState, useEffect, ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import RSVPForm from "./RSVPForm";
+import { useScrollReveal } from "./useScrollReveal";
 
 interface HomePageClientProps {
   carouselSlot: ReactNode;
@@ -18,6 +19,9 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
     minutes: 0,
     seconds: 0,
   });
+
+  // Scroll-triggered animations
+  useScrollReveal();
 
   // Handle scroll for navbar
   useEffect(() => {
@@ -54,7 +58,6 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
   const navLinks = [
     { name: "Home", href: "#home" },
     { name: "Raspored", href: "#raspored" },
-    { name: "FAQ", href: "#faq" },
     { name: "Potvrdite Dolazak", href: "#rsvp" },
     { name: "Contact", href: "#contact" },
   ];
@@ -158,21 +161,21 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
         {/* Hero Content */}
         <div className="relative z-10 px-12 pt-20">
           {/* Names */}
-          <div className="animate-fade-in-up">
+          <div>
             <h1
-              className="text-white text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-light tracking-[0.24em] uppercase mb-2"
+              className="hero-name-1 text-white text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-light tracking-[0.24em] uppercase mb-2"
               style={{ fontFamily: "var(--font-cormorant)" }}
             >
               Tina
             </h1>
             <p
-              className="text-white text-3xl sm:text-4xl md:text-5xl tracking-[0.24em] uppercase my-4"
+              className="hero-ampersand text-white text-3xl sm:text-4xl md:text-5xl tracking-[0.24em] uppercase my-4"
               style={{ fontFamily: "var(--font-cormorant)" }}
             >
               &
             </p>
             <h1
-              className="text-white text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-light tracking-[0.24em] uppercase"
+              className="hero-name-2 text-white text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-light tracking-[0.24em] uppercase"
               style={{ fontFamily: "var(--font-cormorant)" }}
             >
               Sven
@@ -181,10 +184,9 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
 
           {/* Welcome text */}
           <p
-            className="text-white text-sm sm:text-base tracking-[0.48em] uppercase mt-16 mb-4 animate-fade-in-up"
+            className="hero-welcome text-white text-sm sm:text-base tracking-[0.48em] uppercase mt-16 mb-4"
             style={{
               fontFamily: "var(--font-montserrat)",
-              animationDelay: "0.2s",
             }}
           >
             Dobrodošli na naše
@@ -192,21 +194,17 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
 
           {/* Vjenčanje */}
           <h2
-            className="text-white text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-normal animate-fade-in-up"
+            className="hero-script text-white text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-normal"
             style={{
               fontFamily: "var(--font-great-vibes)",
               textShadow: "0 4px 17px rgba(0,0,0,0.325)",
-              animationDelay: "0.3s",
             }}
           >
             Vjenčanje
           </h2>
 
           {/* Date and Location Badge */}
-          <div
-            className="mt-16 animate-fade-in-up"
-            style={{ animationDelay: "0.4s" }}
-          >
+          <div className="mt-16 hero-badge">
             <div className="inline-block bg-[#a0bdca]/80 rounded-full px-16 py-4">
               <p
                 className="text-white text-base sm:text-lg tracking-[0.23em] uppercase"
@@ -233,7 +231,7 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Title */}
           <h2
-            className="text-white text-4xl sm:text-5xl md:text-6xl font-normal uppercase tracking-wide text-center mb-4"
+            className="scroll-reveal fade-up text-white text-4xl sm:text-5xl md:text-6xl font-normal uppercase tracking-wide text-center mb-4"
             style={{ fontFamily: "var(--font-cormorant)" }}
           >
             Priča o nama
@@ -241,7 +239,7 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
 
           {/* Subtitle */}
           <p
-            className="text-[#f7ebe9] text-3xl sm:text-4xl md:text-5xl text-center mb-12 md:mb-16"
+            className="scroll-reveal fade-up text-[#f7ebe9] text-3xl sm:text-4xl md:text-5xl text-center mb-12 md:mb-16"
             style={{ fontFamily: "var(--font-great-vibes)" }}
           >
             7 godina iza, zauvijek pred nama
@@ -250,7 +248,7 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
           {/* Content Grid */}
           <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
             {/* Text Content */}
-            <div className="text-white text-center md:text-left">
+            <div className="scroll-reveal fade-left text-white text-center md:text-left">
               <p
                 className="text-lg md:text-xl leading-relaxed mb-6"
                 style={{ fontFamily: "var(--font-montserrat)" }}
@@ -282,7 +280,9 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
             </div>
 
             {/* Image Carousel Slot */}
-            {carouselSlot}
+            <div className="scroll-reveal fade-right">
+              {carouselSlot}
+            </div>
           </div>
         </div>
       </section>
@@ -308,14 +308,14 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           {/* Title */}
           <h2
-            className="text-[#f9f7f8] text-3xl sm:text-4xl md:text-5xl font-normal mb-12"
+            className="scroll-reveal fade-up text-[#f9f7f8] text-3xl sm:text-4xl md:text-5xl font-normal mb-12"
             style={{ fontFamily: "var(--font-cormorant)" }}
           >
             S veseljem odbrojavamo
           </h2>
 
           {/* Countdown Timer */}
-          <div className="inline-block bg-white/20 backdrop-blur-sm rounded-full px-8 sm:px-16 py-8">
+          <div className="scroll-reveal fade-in inline-block bg-white/20 backdrop-blur-sm rounded-full px-8 sm:px-16 py-8">
             <div className="flex items-center justify-center space-x-4 sm:space-x-8">
               <div className="text-center">
                 <div className="text-white text-4xl sm:text-5xl md:text-6xl font-light">
@@ -365,14 +365,14 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Title */}
           <h2
-            className="text-[#a6aec4] text-4xl sm:text-5xl md:text-6xl font-normal uppercase tracking-wide text-center mb-16"
+            className="scroll-reveal fade-up text-[#a6aec4] text-4xl sm:text-5xl md:text-6xl font-normal uppercase tracking-wide text-center mb-16"
             style={{ fontFamily: "var(--font-cormorant)" }}
           >
             Detalji vjenčanja
           </h2>
 
           {/* Details Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+          <div className="scroll-reveal fade-up grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
             {/* Detail Card 1 */}
             <div className="text-center">
               <div className="w-36 h-48 mx-auto mb-6 relative rounded-lg shadow-lg overflow-hidden">
@@ -479,18 +479,102 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
       >
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2
-            className="text-[#304254] text-4xl sm:text-5xl md:text-6xl font-normal uppercase tracking-wide mb-8 text-center"
+            className="scroll-reveal fade-up text-[#304254] text-4xl sm:text-5xl md:text-6xl font-normal uppercase tracking-wide mb-8 text-center"
             style={{ fontFamily: "var(--font-cormorant)" }}
           >
             Potvrdite Dolazak
           </h2>
           <p
-            className="text-[#304254]/70 text-lg mb-12 text-center"
+            className="scroll-reveal fade-up text-[#304254]/70 text-lg mb-12 text-center"
             style={{ fontFamily: "var(--font-montserrat)" }}
           >
             Molimo vas da potvrdite svoj dolazak do 1. ožujka 2027.
           </p>
           <RSVPForm />
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="py-20 md:py-32 bg-[#b2d6e9]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2
+            className="scroll-reveal fade-up text-[#304254] text-4xl sm:text-5xl md:text-6xl font-normal uppercase tracking-wide mb-4"
+            style={{ fontFamily: "var(--font-cormorant)" }}
+          >
+            Kontakt
+          </h2>
+          <p
+            className="scroll-reveal fade-up text-[#304254]/70 text-3xl sm:text-4xl md:text-5xl mb-12"
+            style={{ fontFamily: "var(--font-great-vibes)" }}
+          >
+            Javite nam se s povjerenjem
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+            {/* Tina */}
+            <div className="scroll-reveal fade-left bg-white/40 backdrop-blur-sm rounded-2xl p-8 border border-white/50">
+              <h3
+                className="text-[#304254] text-2xl md:text-3xl font-normal uppercase tracking-wide mb-6"
+                style={{ fontFamily: "var(--font-cormorant)" }}
+              >
+                Tina
+              </h3>
+              <div className="space-y-4">
+                <a
+                  href="mailto:tina@example.com"
+                  className="flex items-center justify-center gap-3 text-[#304254] hover:text-[#5b8fa8] transition-colors"
+                  style={{ fontFamily: "var(--font-montserrat)" }}
+                >
+                  <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                  </svg>
+                  <span className="text-sm md:text-base">tinamelkic@gmail.com</span>
+                </a>
+                <a
+                  href="tel:+385911234567"
+                  className="flex items-center justify-center gap-3 text-[#304254] hover:text-[#5b8fa8] transition-colors"
+                  style={{ fontFamily: "var(--font-montserrat)" }}
+                >
+                  <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                  </svg>
+                  <span className="text-sm md:text-base">+385 99 837 3201</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Sven */}
+            <div className="scroll-reveal fade-right bg-white/40 backdrop-blur-sm rounded-2xl p-8 border border-white/50">
+              <h3
+                className="text-[#304254] text-2xl md:text-3xl font-normal uppercase tracking-wide mb-6"
+                style={{ fontFamily: "var(--font-cormorant)" }}
+              >
+                Sven
+              </h3>
+              <div className="space-y-4">
+                <a
+                  href="mailto:sven@example.com"
+                  className="flex items-center justify-center gap-3 text-[#304254] hover:text-[#5b8fa8] transition-colors"
+                  style={{ fontFamily: "var(--font-montserrat)" }}
+                >
+                  <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                  </svg>
+                  <span className="text-sm md:text-base">sven.scekic@gmail.com</span>
+                </a>
+                <a
+                  href="tel:+385917654321"
+                  className="flex items-center justify-center gap-3 text-[#304254] hover:text-[#5b8fa8] transition-colors"
+                  style={{ fontFamily: "var(--font-montserrat)" }}
+                >
+                  <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+                  </svg>
+                  <span className="text-sm md:text-base">+385 99 789 8178</span>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
