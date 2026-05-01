@@ -57,6 +57,7 @@ export async function submitRSVP(data: RSVPData): Promise<RSVPResult> {
     // Fall back to matching by email if no name match is found.
     const trimmedName = data.name.trim();
     const trimmedSurname = data.surname.trim();
+    const trimmedEmail = data.email.trim();
 
     const matchedByName = await prisma.$queryRaw<Array<{ id: number }>>`
       SELECT id FROM Guest
@@ -68,7 +69,7 @@ export async function submitRSVP(data: RSVPData): Promise<RSVPResult> {
     const existingGuest =
       matchedByName.length > 0
         ? await prisma.guest.findUnique({ where: { id: matchedByName[0].id } })
-        : await prisma.guest.findUnique({ where: { email: data.email } });
+        : await prisma.guest.findUnique({ where: { email: trimmedEmail } });
 
     let primaryGuest: {
       name: string;
@@ -79,13 +80,30 @@ export async function submitRSVP(data: RSVPData): Promise<RSVPResult> {
     };
 
     if (existingGuest) {
+      // If the supplied email is already used by a *different* guest row,
+      // the unique constraint would reject the update. Surface a clear
+      // error rather than the generic catch-all.
+      if (existingGuest.email !== trimmedEmail) {
+        const emailOwner = await prisma.guest.findUnique({
+          where: { email: trimmedEmail },
+          select: { id: true },
+        });
+        if (emailOwner && emailOwner.id !== existingGuest.id) {
+          return {
+            success: false,
+            message:
+              "Ova email adresa je već povezana s drugim gostom. Molimo unesite drugu adresu.",
+          };
+        }
+      }
+
       // Update existing guest's preferences and mark as attending.
-      // Preserve the stored (properly-accented) name/surname; only update
-      // email if the incoming address differs from what's already stored.
+      // Preserve the stored (properly-accented) name/surname; always
+      // override the stored email with the user-provided one.
       primaryGuest = await prisma.guest.update({
         where: { id: existingGuest.id },
         data: {
-          email: data.email,
+          email: trimmedEmail,
           drinkPreferences: data.drinkPreference || null,
           otherRequests: data.otherPreferences || null,
           rsvpStatus: "ATTENDING",
@@ -102,9 +120,9 @@ export async function submitRSVP(data: RSVPData): Promise<RSVPResult> {
       // Create new guest
       primaryGuest = await prisma.guest.create({
         data: {
-          name: data.name,
-          surname: data.surname,
-          email: data.email,
+          name: trimmedName,
+          surname: trimmedSurname,
+          email: trimmedEmail,
           drinkPreferences: data.drinkPreference || null,
           otherRequests: data.otherPreferences || null,
           guestOf: "SVEN", // Default, can be updated later

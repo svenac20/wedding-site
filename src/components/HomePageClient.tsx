@@ -152,6 +152,7 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
             src="https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
             alt="Background image main"
             fill
+            sizes="100vw"
             className="object-cover object-center"
             priority
           />
@@ -299,6 +300,7 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
                 src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
                 alt="Background"
                 fill
+                sizes="100vw"
                 className="object-cover object-center"
                 priority
             />
@@ -380,6 +382,7 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
                   src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
                   alt="Dolazak gostiju"
                   fill
+                  sizes="144px"
                   className="object-cover object-center"
                 />
               </div>
@@ -404,6 +407,7 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
                   src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
                   alt="Ceremonija"
                   fill
+                  sizes="144px"
                   className="object-cover object-center"
                 />
               </div>
@@ -428,6 +432,7 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
                   src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
                   alt="Koktel"
                   fill
+                  sizes="144px"
                   className="object-cover object-center"
                 />
               </div>
@@ -452,6 +457,7 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
                   src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
                   alt="Večera i zabava"
                   fill
+                  sizes="144px"
                   className="object-cover object-center"
                 />
               </div>

@@ -45,10 +45,18 @@ export default function ImageCarousel({ images, className = "" }: ImageCarouselP
 
   return (
     <div className={`relative ${className}`}>
-      {/* Preload all images using link preload */}
-      {images.map((src) => (
-        <link key={`preload-${src}`} rel="preload" as="image" href={src} />
-      ))}
+      {/*
+        Preload only the next image so the browser doesn't warn about
+        unused preloads. The current image is rendered via next/image with
+        `priority` below, and remaining slides are fetched lazily on demand.
+      */}
+      {images.length > 1 && (
+        <link
+          rel="preload"
+          as="image"
+          href={images[(currentIndex + 1) % images.length]}
+        />
+      )}
 
       {/* Image Container */}
       <div className="aspect-3/4 relative overflow-hidden rounded-lg shadow-2xl transform rotate-2">
