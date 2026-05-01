@@ -243,7 +243,7 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
             className="scroll-reveal fade-up text-[#f7ebe9] text-3xl sm:text-4xl md:text-5xl text-center mb-12 md:mb-16"
             style={{ fontFamily: "var(--font-great-vibes)" }}
           >
-            7 godina iza, zauvijek pred nama
+            8 godina iza, zauvijek pred nama
           </p>
 
           {/* Content Grid */}
