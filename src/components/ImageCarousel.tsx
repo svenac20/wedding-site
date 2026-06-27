@@ -17,9 +17,23 @@ export default function ImageCarousel({ images, className = "" }: ImageCarouselP
   // beneath the incoming image during the crossfade so there is never a
   // transparent gap (which is what flashes/flickers on mobile GPUs).
   const [prevIndex, setPrevIndex] = useState(0);
+  // Indices whose <img> has fully loaded (and is therefore decoded and safe to
+  // fade in). Revealing an image before it is decoded paints one blank/partial
+  // frame on top of the stack, which is the flicker seen on images that hadn't
+  // finished loading yet (e.g. the 3rd and last slides).
+  const [loaded, setLoaded] = useState<Set<number>>(() => new Set());
 
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
+
+  const handleLoaded = useCallback((index: number) => {
+    setLoaded((prev) => {
+      if (prev.has(index)) return prev;
+      const next = new Set(prev);
+      next.add(index);
+      return next;
+    });
+  }, []);
 
   const changeIndex = useCallback((next: number) => {
     setCurrentIndex((current) => {
@@ -105,10 +119,16 @@ export default function ImageCarousel({ images, className = "" }: ImageCarouselP
         {images.map((src, index) => {
           const isCurrent = index === currentIndex;
           const isPrev = index === prevIndex;
+          const isLoaded = loaded.has(index);
+          // The incoming image is only revealed once it has finished loading
+          // (and therefore decoded), so we never paint an undecoded frame.
+          // Until then the previous image stays opaque underneath as a backdrop.
+          const showCurrent = isCurrent && isLoaded;
+          // Hold the previous image until the incoming one is actually visible.
+          const showPrev = isPrev && !showCurrent;
           // Active image on top, the outgoing one just beneath it, rest hidden.
           const zIndex = isCurrent ? 2 : isPrev ? 1 : 0;
-          // Keep the outgoing image opaque so there's no see-through gap.
-          const opacity = isCurrent || isPrev ? 1 : 0;
+          const opacity = showCurrent || showPrev ? 1 : 0;
 
           return (
             <div
@@ -130,6 +150,7 @@ export default function ImageCarousel({ images, className = "" }: ImageCarouselP
                 priority={index === 0}
                 unoptimized
                 draggable={false}
+                onLoad={() => handleLoaded(index)}
                 className="object-cover select-none"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
