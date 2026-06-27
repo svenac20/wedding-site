@@ -13,23 +13,35 @@ const SWIPE_THRESHOLD = 50;
 
 export default function ImageCarousel({ images, className = "" }: ImageCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  // Index that was active before the current one. We keep it fully opaque
+  // beneath the incoming image during the crossfade so there is never a
+  // transparent gap (which is what flashes/flickers on mobile GPUs).
+  const [prevIndex, setPrevIndex] = useState(0);
 
   const touchStartX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
 
+  const changeIndex = useCallback((next: number) => {
+    setCurrentIndex((current) => {
+      if (next === current) return current;
+      setPrevIndex(current);
+      return next;
+    });
+  }, []);
+
   const goToPrevious = useCallback(() => {
     if (images.length === 0) return;
-    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-  }, [images.length]);
+    changeIndex(currentIndex === 0 ? images.length - 1 : currentIndex - 1);
+  }, [images.length, currentIndex, changeIndex]);
 
   const goToNext = useCallback(() => {
     if (images.length === 0) return;
-    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-  }, [images.length]);
+    changeIndex(currentIndex === images.length - 1 ? 0 : currentIndex + 1);
+  }, [images.length, currentIndex, changeIndex]);
 
   const goToIndex = useCallback((index: number) => {
-    setCurrentIndex(index);
-  }, []);
+    changeIndex(index);
+  }, [changeIndex]);
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
@@ -77,34 +89,53 @@ export default function ImageCarousel({ images, className = "" }: ImageCarouselP
       {/* Image Container */}
       <div
         className="aspect-3/4 relative overflow-hidden rounded-lg shadow-2xl transform rotate-2 touch-pan-y"
+        style={{ isolation: "isolate" }}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
         {/*
-          All images stay mounted and stacked on top of each other; we only
-          crossfade opacity between them. Keeping every slide in the DOM means
-          the browser decodes each image once and never has to re-mount or
-          re-fetch when switching, which eliminates the flicker on mobile.
+          All images stay mounted and stacked on top of each other. We crossfade
+          by fading the incoming image (top of the stack) up from 0 while the
+          previous image stays fully opaque directly beneath it. Because there is
+          always an opaque image behind the one that's fading, the background is
+          never visible through the stack, which is what eliminates the flicker
+          on mobile. Each layer is promoted to its own GPU compositing layer to
+          avoid repaint flashes during the transition.
         */}
-        {images.map((src, index) => (
-          <div
-            key={src}
-            className="absolute inset-0 transition-opacity duration-500 ease-out"
-            style={{ opacity: index === currentIndex ? 1 : 0 }}
-            aria-hidden={index === currentIndex ? undefined : true}
-          >
-            <Image
-              src={src}
-              alt={`Photo ${index + 1}`}
-              fill
-              priority={index === 0}
-              unoptimized
-              draggable={false}
-              className="object-cover select-none"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
-          </div>
-        ))}
+        {images.map((src, index) => {
+          const isCurrent = index === currentIndex;
+          const isPrev = index === prevIndex;
+          // Active image on top, the outgoing one just beneath it, rest hidden.
+          const zIndex = isCurrent ? 2 : isPrev ? 1 : 0;
+          // Keep the outgoing image opaque so there's no see-through gap.
+          const opacity = isCurrent || isPrev ? 1 : 0;
+
+          return (
+            <div
+              key={src}
+              className="absolute inset-0 transition-opacity duration-500 ease-out"
+              style={{
+                opacity,
+                zIndex,
+                willChange: "opacity",
+                transform: "translateZ(0)",
+                backfaceVisibility: "hidden",
+              }}
+              aria-hidden={isCurrent ? undefined : true}
+            >
+              <Image
+                src={src}
+                alt={`Photo ${index + 1}`}
+                fill
+                priority={index === 0}
+                unoptimized
+                draggable={false}
+                className="object-cover select-none"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            </div>
+          );
+        })}
       </div>
 
       {/* Navigation Arrows */}
