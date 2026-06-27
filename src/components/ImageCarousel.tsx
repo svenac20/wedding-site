@@ -148,7 +148,7 @@ export default function ImageCarousel({ images, className = "" }: ImageCarouselP
                 alt={`Photo ${index + 1}`}
                 fill
                 priority={index === 0}
-                unoptimized
+                loading={index === 0 ? undefined : "eager"}
                 draggable={false}
                 onLoad={() => handleLoaded(index)}
                 className="object-cover select-none"
