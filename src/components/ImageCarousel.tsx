@@ -149,6 +149,7 @@ export default function ImageCarousel({ images, className = "" }: ImageCarouselP
                 fill
                 priority={index === 0}
                 loading={index === 0 ? undefined : "eager"}
+                unoptimized
                 draggable={false}
                 onLoad={() => handleLoaded(index)}
                 className="object-cover select-none"

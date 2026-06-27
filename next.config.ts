@@ -5,13 +5,6 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   output: "standalone",
   images: {
-    // Serve modern, much smaller formats sized to the device. This is the main
-    // fix for mobile carousel flicker: phones download/decode far fewer bytes
-    // instead of the full-resolution source JPEGs.
-    formats: ["image/avif", "image/webp"],
-    // Cache optimized images aggressively so navigating the carousel doesn't
-    // refetch them on mobile (which caused blank repaints / flicker).
-    minimumCacheTTL: 60 * 60 * 24 * 30,
     remotePatterns: [
       {
         protocol: "https",
@@ -24,6 +17,9 @@ const nextConfig: NextConfig = {
     return [
       {
         // Long-lived cache for the static carousel assets in /public/home-page.
+        // These are served directly (images are `unoptimized`), so caching them
+        // stops mobile browsers from refetching on every navigation, which is
+        // what caused blank repaints / flicker.
         source: "/home-page/:path*",
         headers: [
           {
