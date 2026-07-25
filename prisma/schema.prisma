@@ -31,6 +31,7 @@ model Guest {
   email            String?   @unique
   drinkPreferences String?  @db.Text
   otherRequests    String?  @db.Text
+  physicalInvitation Boolean @default(false)
   guestOf          GuestOf
   rsvpStatus       RSVPStatus @default(PENDING)
   createdAt        DateTime @default(now())

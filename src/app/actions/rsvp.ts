@@ -19,6 +19,7 @@ interface RSVPData {
   email: string;
   drinkPreference: string;
   otherPreferences: string;
+  physicalInvitation: boolean;
   confirmingForOthers: boolean;
   selectedGuests: number[];
   guestDetailsList: GuestDetail[];
@@ -106,6 +107,7 @@ export async function submitRSVP(data: RSVPData): Promise<RSVPResult> {
           email: trimmedEmail,
           drinkPreferences: data.drinkPreference || null,
           otherRequests: data.otherPreferences || null,
+          physicalInvitation: Boolean(data.physicalInvitation),
           rsvpStatus: "ATTENDING",
         },
         select: {
@@ -125,6 +127,7 @@ export async function submitRSVP(data: RSVPData): Promise<RSVPResult> {
           email: trimmedEmail,
           drinkPreferences: data.drinkPreference || null,
           otherRequests: data.otherPreferences || null,
+          physicalInvitation: Boolean(data.physicalInvitation),
           guestOf: "SVEN", // Default, can be updated later
           rsvpStatus: "ATTENDING",
         },
@@ -165,6 +168,7 @@ export async function submitRSVP(data: RSVPData): Promise<RSVPResult> {
             data: {
               rsvpStatus: "ATTENDING",
               drinkPreferences: detail?.drinkPreference || null,
+              physicalInvitation: Boolean(data.physicalInvitation),
               // Only update email if a valid non-empty value was provided
               ...(emailValue ? { email: emailValue } : {}),
             },

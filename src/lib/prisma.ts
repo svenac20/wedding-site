@@ -20,10 +20,15 @@ function createPrismaClient() {
   const dbUrl = process.env.DATABASE_URL!
   const config = parseDatabaseUrl(dbUrl)
 
+  const isProduction = process.env.NODE_ENV === 'production'
+
   const adapter = new PrismaMariaDb({
     ...config,
     // Azure MySQL Flexible Server requires SSL
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: true } : undefined,
+    ssl: isProduction ? { rejectUnauthorized: true } : undefined,
+    // Local dev connects without TLS, so MySQL 8's caching_sha2_password auth
+    // needs explicit permission to fetch the server's RSA public key.
+    allowPublicKeyRetrieval: !isProduction,
     connectTimeout: 15000,
   })
   return new PrismaClient({ adapter })

@@ -47,6 +47,7 @@ export default function RSVPForm() {
     drinkPreferences: [] as string[],
     otherDrink: "",
     otherPreferences: "",
+    physicalInvitation: false,
     confirmingForOthers: false,
     selectedGuests: [] as number[],
     guestDetails: {} as Record<number, { drinkPreferences: string[]; otherDrink: string; email: string }>,
@@ -263,6 +264,7 @@ export default function RSVPForm() {
           drinkPreferences: [],
           otherDrink: "",
           otherPreferences: "",
+          physicalInvitation: false,
           confirmingForOthers: false,
           selectedGuests: [],
           guestDetails: {},
@@ -459,6 +461,25 @@ export default function RSVPForm() {
           style={{ fontFamily: "var(--font-montserrat)" }}
           placeholder="Npr. alergije na hranu, vegetarijanska prehrana, posebni zahtjevi..."
         />
+      </div>
+
+      {/* Physical Invitation Checkbox */}
+      <div className="flex items-center">
+        <input
+          type="checkbox"
+          id="physicalInvitation"
+          name="physicalInvitation"
+          checked={formData.physicalInvitation}
+          onChange={handleInputChange}
+          className="w-5 h-5 rounded border-[#304254]/20 text-[#a0bdca] focus:ring-[#a0bdca] cursor-pointer"
+        />
+        <label
+          htmlFor="physicalInvitation"
+          className="ml-3 text-[#304254] text-sm font-medium cursor-pointer"
+          style={{ fontFamily: "var(--font-montserrat)" }}
+        >
+          Želite li fizičku pozivnicu?
+        </label>
       </div>
 
       {/* Confirming for Others Checkbox */}
