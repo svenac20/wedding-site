@@ -16,20 +16,14 @@ function getEmailClient(): EmailClient {
   return emailClient;
 }
 
-// Email sender address - update this after configuring custom domain
+// Email sender address - must be a bare address that exists as a MailFrom
+// address on the Azure Communication Services domain.
+// The name guests see in their inbox comes from that MailFrom entry's
+// "Display Name" in Azure, NOT from here - ACS rejects a "Name <address>"
+// value with "Request body validation error. See property 'senderAddress'".
 const SENDER_ADDRESS =
   process.env.EMAIL_SENDER_ADDRESS ||
   "DoNotReply@<your-resource>.azurecomm.net";
-
-// Friendly "from" name shown in the inbox (e.g. "Tina i Sven").
-// NOTE: Azure Communication Services only honours a custom display name on a
-// verified custom domain. On the free azurecomm.net managed domain the sender
-// stays "DoNotReply", so leave EMAIL_SENDER_NAME unset until the domain is set up.
-const SENDER_NAME = process.env.EMAIL_SENDER_NAME?.trim();
-
-const FROM_ADDRESS = SENDER_NAME
-  ? `${SENDER_NAME} <${SENDER_ADDRESS}>`
-  : SENDER_ADDRESS;
 
 // Wedding details - customize these
 const WEDDING_DETAILS = {
@@ -331,7 +325,7 @@ export async function sendRsvpConfirmationEmail(
     const client = getEmailClient();
 
     const message: EmailMessage = {
-      senderAddress: FROM_ADDRESS,
+      senderAddress: SENDER_ADDRESS,
       content: {
         subject: "Potvrda dolaska · Vjenčanje Tina & Sven",
         plainText: generateConfirmationEmailText(guest),
