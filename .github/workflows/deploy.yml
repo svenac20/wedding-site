@@ -64,4 +64,5 @@ jobs:
             --set-env-vars \
               DATABASE_URL="${{ secrets.DATABASE_URL }}" \
               AZURE_COMMUNICATION_CONNECTION_STRING="${{ secrets.AZURE_COMMUNICATION_CONNECTION_STRING }}" \
-              EMAIL_SENDER_ADDRESS="${{ secrets.EMAIL_SENDER_ADDRESS }}"
+              EMAIL_SENDER_ADDRESS="${{ secrets.EMAIL_SENDER_ADDRESS }}" \
+              EMAIL_SENDER_NAME="${{ vars.EMAIL_SENDER_NAME }}"
