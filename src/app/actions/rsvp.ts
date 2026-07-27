@@ -20,6 +20,7 @@ interface RSVPData {
   drinkPreference: string;
   otherPreferences: string;
   physicalInvitation: boolean;
+  invitationAddress: string;
   confirmingForOthers: boolean;
   selectedGuests: number[];
   guestDetailsList: GuestDetail[];
@@ -49,6 +50,18 @@ export async function submitRSVP(data: RSVPData): Promise<RSVPResult> {
       return {
         success: false,
         message: "Molimo unesite ispravnu email adresu.",
+      };
+    }
+
+    const wantsPhysicalInvitation = Boolean(data.physicalInvitation);
+    const invitationAddress = wantsPhysicalInvitation
+      ? (data.invitationAddress || "").trim()
+      : "";
+
+    if (wantsPhysicalInvitation && !invitationAddress) {
+      return {
+        success: false,
+        message: "Molimo unesite adresu za dostavu fizičke pozivnice.",
       };
     }
 
@@ -108,6 +121,7 @@ export async function submitRSVP(data: RSVPData): Promise<RSVPResult> {
           drinkPreferences: data.drinkPreference || null,
           otherRequests: data.otherPreferences || null,
           physicalInvitation: Boolean(data.physicalInvitation),
+          invitationAddress: invitationAddress || null,
           rsvpStatus: "ATTENDING",
         },
         select: {
@@ -128,6 +142,7 @@ export async function submitRSVP(data: RSVPData): Promise<RSVPResult> {
           drinkPreferences: data.drinkPreference || null,
           otherRequests: data.otherPreferences || null,
           physicalInvitation: Boolean(data.physicalInvitation),
+          invitationAddress: invitationAddress || null,
           guestOf: "SVEN", // Default, can be updated later
           rsvpStatus: "ATTENDING",
         },
@@ -169,6 +184,7 @@ export async function submitRSVP(data: RSVPData): Promise<RSVPResult> {
               rsvpStatus: "ATTENDING",
               drinkPreferences: detail?.drinkPreference || null,
               physicalInvitation: Boolean(data.physicalInvitation),
+              invitationAddress: invitationAddress || null,
               // Only update email if a valid non-empty value was provided
               ...(emailValue ? { email: emailValue } : {}),
             },

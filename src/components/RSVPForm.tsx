@@ -48,6 +48,7 @@ export default function RSVPForm() {
     otherDrink: "",
     otherPreferences: "",
     physicalInvitation: false,
+    invitationAddress: "",
     confirmingForOthers: false,
     selectedGuests: [] as number[],
     guestDetails: {} as Record<number, { drinkPreferences: string[]; otherDrink: string; email: string }>,
@@ -106,6 +107,7 @@ export default function RSVPForm() {
         ...prev,
         [name]: checked,
         ...(name === "confirmingForOthers" && !checked ? { selectedGuests: [] } : {}),
+        ...(name === "physicalInvitation" && !checked ? { invitationAddress: "" } : {}),
       }));
     } else {
       setFormData((prev) => ({
@@ -265,6 +267,7 @@ export default function RSVPForm() {
           otherDrink: "",
           otherPreferences: "",
           physicalInvitation: false,
+          invitationAddress: "",
           confirmingForOthers: false,
           selectedGuests: [],
           guestDetails: {},
@@ -481,6 +484,30 @@ export default function RSVPForm() {
           Želite li fizičku pozivnicu?
         </label>
       </div>
+
+      {/* Invitation Address - Only shown when physical invitation is requested */}
+      {formData.physicalInvitation && (
+        <div className="animate-fade-in">
+          <label
+            htmlFor="invitationAddress"
+            className="block text-[#304254] text-sm font-medium mb-2"
+            style={{ fontFamily: "var(--font-montserrat)" }}
+          >
+            Adresa za dostavu pozivnice *
+          </label>
+          <textarea
+            id="invitationAddress"
+            name="invitationAddress"
+            value={formData.invitationAddress}
+            onChange={handleInputChange}
+            required
+            rows={3}
+            className="w-full px-4 py-3 rounded-lg border border-[#304254]/20 bg-white text-[#304254] focus:outline-none focus:ring-2 focus:ring-[#a0bdca] focus:border-transparent transition-all resize-none"
+            style={{ fontFamily: "var(--font-montserrat)" }}
+            placeholder="Ulica i kućni broj, poštanski broj, grad, država"
+          />
+        </div>
+      )}
 
       {/* Confirming for Others Checkbox */}
       <div className="flex items-center">
