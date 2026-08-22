@@ -16,24 +16,19 @@ const DRINK_OPTIONS = [
   { value: "cognac", label: "Cognac" },
   { value: "cosmopolitan", label: "Cosmopolitan" },
   { value: "wine_red", label: "Crno vino" },
-  { value: "tea", label: "Čaj" },
   { value: "gin", label: "Gin" },
   { value: "gin_tonic", label: "Gin & Tonic" },
   { value: "hugo", label: "Hugo" },
   { value: "jack_daniels", label: "Jack Daniels" },
-  { value: "coffee", label: "Kava" },
   { value: "margarita", label: "Margarita" },
   { value: "martini", label: "Martini" },
   { value: "mojito", label: "Mojito" },
-  { value: "beer", label: "Pivo" },
   { value: "prosecco", label: "Prosecco" },
   { value: "brandy", label: "Rakija / Brandy" },
   { value: "wine_rose", label: "Rose vino" },
   { value: "rum", label: "Rum" },
-  { value: "juice", label: "Sok" },
   { value: "champagne", label: "Šampanjac" },
   { value: "tequila", label: "Tequila" },
-  { value: "water", label: "Voda" },
   { value: "vodka", label: "Votka" },
   { value: "whiskey", label: "Whiskey" },
   { value: "other", label: "Ostalo..." },
@@ -78,6 +73,7 @@ export default function RSVPForm() {
     return normalizedFullName.includes(normalizedSearch) && !isCurrentUser;
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionError, setSubmissionError] = useState<string | null>(null);
   const { messages: toastMessages, showToast, closeToast } = useToast();
 
   // Fetch available guests when checkbox is checked
@@ -218,6 +214,7 @@ export default function RSVPForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmissionError(null);
     setIsSubmitting(true);
 
     try {
@@ -274,10 +271,13 @@ export default function RSVPForm() {
         });
         setOpenGuestDrinkDropdowns({});
       } else {
+        setSubmissionError(result.message);
         showToast("error", result.message);
       }
-    } catch (error) {
-      showToast("error", "Došlo je do greške. Molimo pokušajte ponovno.");
+    } catch {
+      const message = "Došlo je do greške. Molimo pokušajte ponovno.";
+      setSubmissionError(message);
+      showToast("error", message);
     } finally {
       setIsSubmitting(false);
     }
@@ -753,6 +753,16 @@ export default function RSVPForm() {
 
       {/* Toast Container */}
       <ToastContainer messages={toastMessages} onClose={closeToast} />
+
+      {submissionError && (
+        <div
+          role="alert"
+          className="rounded-lg border border-[#c97b7b]/40 bg-[#c97b7b]/10 px-4 py-3 text-sm font-medium text-[#8f4545]"
+          style={{ fontFamily: "var(--font-montserrat)" }}
+        >
+          {submissionError}
+        </div>
+      )}
 
       {/* Submit Button */}
       <button

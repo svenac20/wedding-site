@@ -6,6 +6,12 @@ import {
   sendBulkRsvpConfirmationEmails,
 } from "@/lib/email";
 import { prisma } from "@/lib/prisma";
+import { resolveGuestDeliveryEmail } from "./rsvp-email-delivery";
+import {
+  findConflictingEmails,
+  formatTakenEmailMessage,
+  getRSVPErrorMessage,
+} from "./rsvp-errors";
 
 interface GuestDetail {
   id: number;
@@ -85,6 +91,41 @@ export async function submitRSVP(data: RSVPData): Promise<RSVPResult> {
         ? await prisma.guest.findUnique({ where: { id: matchedByName[0].id } })
         : await prisma.guest.findUnique({ where: { email: trimmedEmail } });
 
+    const guestDetailsMap = new Map(
+      (data.guestDetailsList || []).map((guest) => [guest.id, guest])
+    );
+    const emailAssignments = [
+      { guestId: existingGuest?.id ?? null, email: trimmedEmail },
+      ...(data.confirmingForOthers
+        ? data.selectedGuests.flatMap((guestId) => {
+            const email = guestDetailsMap.get(guestId)?.email?.trim();
+            return email ? [{ guestId, email }] : [];
+          })
+        : []),
+    ];
+    const submittedEmails = [
+      ...new Map(
+        emailAssignments.map(({ email }) => [email.toLowerCase(), email])
+      ).values(),
+    ];
+    const existingEmailOwners = await prisma.guest.findMany({
+      where: { email: { in: submittedEmails } },
+      select: { id: true, email: true },
+    });
+    const conflictingEmails = findConflictingEmails(
+      emailAssignments,
+      existingEmailOwners.flatMap(({ id, email }) =>
+        email ? [{ guestId: id, email }] : []
+      )
+    );
+
+    if (conflictingEmails.length > 0) {
+      return {
+        success: false,
+        message: formatTakenEmailMessage(conflictingEmails),
+      };
+    }
+
     let primaryGuest: {
       name: string;
       surname: string;
@@ -94,23 +135,6 @@ export async function submitRSVP(data: RSVPData): Promise<RSVPResult> {
     };
 
     if (existingGuest) {
-      // If the supplied email is already used by a *different* guest row,
-      // the unique constraint would reject the update. Surface a clear
-      // error rather than the generic catch-all.
-      if (existingGuest.email !== trimmedEmail) {
-        const emailOwner = await prisma.guest.findUnique({
-          where: { email: trimmedEmail },
-          select: { id: true },
-        });
-        if (emailOwner && emailOwner.id !== existingGuest.id) {
-          return {
-            success: false,
-            message:
-              "Ova email adresa je već povezana s drugim gostom. Molimo unesite drugu adresu.",
-          };
-        }
-      }
-
       // Update existing guest's preferences and mark as attending.
       // Preserve the stored (properly-accented) name/surname; always
       // override the stored email with the user-provided one.
@@ -169,10 +193,6 @@ export async function submitRSVP(data: RSVPData): Promise<RSVPResult> {
 
     // If confirming for others, update their RSVP status and drink preferences individually
     if (data.confirmingForOthers && data.selectedGuests.length > 0) {
-      const guestDetailsMap = new Map(
-        (data.guestDetailsList || []).map((g) => [g.id, g])
-      );
-
       // Update each guest individually to save their specific drink preferences and email
       await Promise.all(
         data.selectedGuests.map((guestId) => {
@@ -192,16 +212,16 @@ export async function submitRSVP(data: RSVPData): Promise<RSVPResult> {
         })
       );
 
-      // Fetch updated additional guests with emails to send confirmations
+      // Fetch every updated guest so confirmations without a dedicated
+      // recipient address can be delivered to the primary guest.
       const additionalGuests = await prisma.guest.findMany({
         where: {
           id: { in: data.selectedGuests },
-          email: { not: null },
         },
         select: {
+          id: true,
           name: true,
           surname: true,
-          email: true,
           drinkPreferences: true,
           otherRequests: true,
         },
@@ -209,15 +229,16 @@ export async function submitRSVP(data: RSVPData): Promise<RSVPResult> {
 
       // Send confirmation emails to additional guests (non-blocking)
       if (additionalGuests.length > 0) {
-        const guestsWithEmail = additionalGuests
-          .filter((g) => g.email !== null)
-          .map((g) => ({
-            name: g.name,
-            surname: g.surname,
-            email: g.email as string,
-            drinkPreferences: g.drinkPreferences,
-            otherRequests: g.otherRequests,
-          }));
+        const guestsWithEmail = additionalGuests.map((guest) => ({
+          name: guest.name,
+          surname: guest.surname,
+          email: resolveGuestDeliveryEmail(
+            guestDetailsMap.get(guest.id)?.email,
+            trimmedEmail
+          ),
+          drinkPreferences: guest.drinkPreferences,
+          otherRequests: guest.otherRequests,
+        }));
 
         sendBulkRsvpConfirmationEmails(guestsWithEmail).catch((err) =>
           console.error("Failed to send additional guest emails:", err)
@@ -233,7 +254,9 @@ export async function submitRSVP(data: RSVPData): Promise<RSVPResult> {
     console.error("Failed to process RSVP:", error);
     return {
       success: false,
-      message: "Došlo je do greške pri obradi. Molimo pokušajte ponovno.",
+      message:
+        getRSVPErrorMessage(error) ||
+        "Došlo je do greške pri obradi. Molimo pokušajte ponovno.",
     };
   }
 }
