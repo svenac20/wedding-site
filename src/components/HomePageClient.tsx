@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import RSVPForm from "./RSVPForm";
 import { useScrollReveal } from "./useScrollReveal";
+import { CEREMONY_VENUE } from "@/lib/wedding-details";
 
 interface HomePageClientProps {
   carouselSlot: ReactNode;
@@ -422,6 +423,12 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
                 style={{ fontFamily: "var(--font-montserrat)" }}
               >
                 Ceremonija
+              </p>
+              <p
+                className="text-[#a6aec4] text-sm sm:text-base mt-2"
+                style={{ fontFamily: "var(--font-montserrat)" }}
+              >
+                {CEREMONY_VENUE}
               </p>
             </div>
 

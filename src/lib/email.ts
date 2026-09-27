@@ -1,6 +1,7 @@
 "use server";
 
 import { EmailClient, EmailMessage } from "@azure/communication-email";
+import { CEREMONY_VENUE } from "./wedding-details";
 
 // Initialize email client (lazy loaded)
 let emailClient: EmailClient | null = null;
@@ -32,7 +33,8 @@ const WEDDING_DETAILS = {
   dateShort: "1. svibnja 2027.",
   location: "Zagreb",
   time: "19:00 sati",
-  ceremonyVenue: "Crkva sv. Marka, Zagreb",
+  ceremonyVenue: CEREMONY_VENUE,
+  ceremonyAddress: "Stenjevec ul. 9, 10090 Zagreb",
   receptionVenue: "Mansion Event Resort",
   receptionAddress: "Ul. Velimira Škorpika 11b, 10090, Zagreb, Croatia",
   contacts: [
@@ -85,6 +87,14 @@ function detailRow(label: string, value: string): string {
             <p style="margin: 0; font-family: ${FONT_SERIF}; font-size: 18px; line-height: 1.45; color: ${COLORS.ink};">${value}</p>
           </td>
         </tr>`;
+}
+
+function mapsUrl(venue: string, address: string): string {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${venue}, ${address}`)}`;
+}
+
+function venueDetails(venue: string, address: string): string {
+  return `${escapeHtml(venue)}<br><a href="${escapeHtml(mapsUrl(venue, address))}" style="font-family: ${FONT_SANS}; font-size: 13px; color: ${COLORS.gray}; text-decoration: underline;">${escapeHtml(address)}</a>`;
 }
 
 function generateConfirmationEmailHtml(guest: GuestEmailData): string {
@@ -200,10 +210,13 @@ function generateConfirmationEmailHtml(guest: GuestEmailData): string {
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                       ${detailRow("Datum", WEDDING_DETAILS.date)}
                       ${detailRow("Vrijeme", WEDDING_DETAILS.time)}
-                      ${detailRow("Ceremonija", WEDDING_DETAILS.ceremonyVenue)}
+                      ${detailRow(
+                        "Ceremonija",
+                        venueDetails(WEDDING_DETAILS.ceremonyVenue, WEDDING_DETAILS.ceremonyAddress)
+                      )}
                       ${detailRow(
                         "Slavlje",
-                        `${WEDDING_DETAILS.receptionVenue}<br><span style="font-family: ${FONT_SANS}; font-size: 13px; color: ${COLORS.gray};">${WEDDING_DETAILS.receptionAddress}</span>`
+                        venueDetails(WEDDING_DETAILS.receptionVenue, WEDDING_DETAILS.receptionAddress)
                       )}
                     </table>
                   </td>
@@ -284,10 +297,13 @@ Vrijeme: ${WEDDING_DETAILS.time}
 
 Ceremonija:
 ${WEDDING_DETAILS.ceremonyVenue}
+${WEDDING_DETAILS.ceremonyAddress}
+${mapsUrl(WEDDING_DETAILS.ceremonyVenue, WEDDING_DETAILS.ceremonyAddress)}
 
 Slavlje:
 ${WEDDING_DETAILS.receptionVenue}
 ${WEDDING_DETAILS.receptionAddress}
+${mapsUrl(WEDDING_DETAILS.receptionVenue, WEDDING_DETAILS.receptionAddress)}
 `;
 
   if (guest.drinkPreferences || guest.otherRequests) {
