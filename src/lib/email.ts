@@ -23,7 +23,7 @@ function getEmailClient(): EmailClient {
 // value with "Request body validation error. See property 'senderAddress'".
 const SENDER_ADDRESS =
   process.env.EMAIL_SENDER_ADDRESS ||
-  "DoNotReply@<your-resource>.azurecomm.net";
+  "rezervacija@mail.tina-i-sven-wedding.com";
 
 // Wedding details - customize these
 const WEDDING_DETAILS = {
@@ -39,7 +39,8 @@ const WEDDING_DETAILS = {
     { name: "Sven", email: "sven.scekic@gmail.com", phone: "+385997898178" },
     { name: "Tina", email: "tinamelkic@gmail.com", phone: "+385998373201" },
   ],
-  websiteUrl: process.env.NEXT_PUBLIC_SITE_URL || "",
+  websiteUrl:
+    process.env.NEXT_PUBLIC_SITE_URL || "https://www.tina-i-sven-wedding.com",
 };
 
 // Palette mirrored from the website (src/app/globals.css)
@@ -113,11 +114,9 @@ function generateConfirmationEmailHtml(guest: GuestEmailData): string {
       <tr><td style="height: 32px; line-height: 32px; font-size: 0;">&nbsp;</td></tr>`
       : "";
 
-  const websiteLink = WEDDING_DETAILS.websiteUrl
-    ? `<p style="margin: 16px 0 0 0; font-family: ${FONT_SANS}; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;">
-        <a href="${WEDDING_DETAILS.websiteUrl}" style="color: ${COLORS.blueMuted}; text-decoration: none;">Posjetite našu stranicu</a>
-      </p>`
-    : "";
+  const websiteLink = `<p style="margin: 20px 0 0 0; font-family: ${FONT_SANS}; font-size: 13px; line-height: 1.6;">
+                Sve informacije pronaći ćete na <a href="${escapeHtml(WEDDING_DETAILS.websiteUrl)}" style="color: ${COLORS.ink}; text-decoration: underline;">našoj web stranici</a>.
+              </p>`;
 
   return `
 <!DOCTYPE html>
@@ -142,7 +141,7 @@ function generateConfirmationEmailHtml(guest: GuestEmailData): string {
 </head>
 <body style="margin: 0; padding: 0; background-color: ${COLORS.blueLight};">
   <div style="display: none; max-height: 0; overflow: hidden; opacity: 0; font-size: 1px; line-height: 1px; color: ${COLORS.blueLight};">
-    Vaša potvrda dolaska je zaprimljena — vidimo se ${WEDDING_DETAILS.dateShort}
+    Vaša potvrda dolaska je zaprimljena - vidimo se ${WEDDING_DETAILS.dateShort}
   </div>
 
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: ${COLORS.blueLight};">
@@ -185,8 +184,9 @@ function generateConfirmationEmailHtml(guest: GuestEmailData): string {
                 Dragi/a ${fullName},
               </p>
               <p style="margin: 0; font-family: ${FONT_SANS}; font-size: 15px; line-height: 1.75; color: ${COLORS.ink};">
-                Zaprimili smo vašu potvrdu dolaska i iznimno nam je drago što ćete biti dio našeg posebnog dana. Ispod su svi detalji — sačuvajte ovaj email za svaki slučaj.
+                Zaprimili smo vašu potvrdu dolaska i iznimno nam je drago što ćete biti dio našeg posebnog dana. Ispod su svi detalji - sačuvajte ovaj email za svaki slučaj.
               </p>
+              ${websiteLink}
             </td>
           </tr>
 
@@ -235,7 +235,6 @@ function generateConfirmationEmailHtml(guest: GuestEmailData): string {
                   )
                   .join("")}
               </table>
-              ${websiteLink}
             </td>
           </tr>
 
@@ -275,6 +274,9 @@ Dragi/a ${guest.name} ${guest.surname},
 
 Zaprimili smo vašu potvrdu dolaska i iznimno nam je drago što ćete biti dio našeg posebnog dana. Ispod su svi detalji - sačuvajte ovaj email za svaki slučaj.
 
+Sve informacije pronaći ćete na našoj web stranici:
+${WEDDING_DETAILS.websiteUrl}
+
 DETALJI VJENČANJA
 -----------------
 Datum: ${WEDDING_DETAILS.date}
@@ -307,7 +309,6 @@ IMATE PITANJE?
 ${WEDDING_DETAILS.contacts
   .map((contact) => `${contact.name}: ${contact.email} · ${contact.phone}`)
   .join("\n")}
-${WEDDING_DETAILS.websiteUrl ? `${WEDDING_DETAILS.websiteUrl}\n` : ""}
 S ljubavlju,
 ${WEDDING_DETAILS.coupleNames}
 

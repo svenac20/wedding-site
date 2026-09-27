@@ -16,6 +16,16 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## RSVP confirmation emails
+
+Set `AZURE_COMMUNICATION_CONNECTION_STRING` and `EMAIL_SENDER_ADDRESS` in your
+local `.env`. The sender is `rezervacija@mail.tina-i-sven-wedding.com`; it must
+be configured as a MailFrom address on the Azure Communication Services domain.
+For deployments, set the `EMAIL_SENDER_ADDRESS` GitHub Actions secret to the
+same address. The website link in confirmation emails defaults to
+`https://www.tina-i-sven-wedding.com`; override it with `NEXT_PUBLIC_SITE_URL`
+if the site moves.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
