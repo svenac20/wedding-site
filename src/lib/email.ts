@@ -40,7 +40,7 @@ const WEDDING_DETAILS = {
     { name: "Tina", email: "tinamelkic@gmail.com", phone: "+385998373201" },
   ],
   websiteUrl:
-    process.env.NEXT_PUBLIC_SITE_URL || "https://www.tina-i-sven-wedding.com",
+    process.env.NEXT_PUBLIC_SITE_URL || "https://tina-i-sven-wedding.com",
 };
 
 // Palette mirrored from the website (src/app/globals.css)
