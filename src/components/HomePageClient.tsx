@@ -598,6 +598,14 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
             <div className="text-sm">
               Made with ❤️ for Tina & Sven
             </div>
+            <a
+              href="https://icons8.com"
+              className="text-sm underline underline-offset-2"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Favicon by Icons8
+            </a>
           </div>
         </div>
       </footer>
