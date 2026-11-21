@@ -43,6 +43,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Custom scrollbar */
+@supports not selector(::-webkit-scrollbar) {
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--blue-primary) var(--blue-light);
+  }
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }

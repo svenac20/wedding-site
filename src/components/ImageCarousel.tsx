@@ -166,7 +166,7 @@ export default function ImageCarousel({ images, className = "" }: ImageCarouselP
           {/* Left Arrow */}
           <button
             onClick={goToPrevious}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 md:-translate-x-full w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-white hover:text-white transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50 rounded-full cursor-pointer bg-black/30 backdrop-blur-sm shadow-lg"
+            className="absolute left-2 xl:left-0 top-1/2 -translate-y-1/2 xl:-translate-x-full w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-white hover:text-white transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50 rounded-full cursor-pointer bg-black/30 backdrop-blur-sm shadow-lg"
             aria-label="Previous image"
           >
             <svg
@@ -187,7 +187,7 @@ export default function ImageCarousel({ images, className = "" }: ImageCarouselP
           {/* Right Arrow */}
           <button
             onClick={goToNext}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 md:translate-x-full w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-white hover:text-white transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50 rounded-full cursor-pointer bg-black/30 backdrop-blur-sm shadow-lg"
+            className="absolute right-2 xl:right-0 top-1/2 -translate-y-1/2 xl:translate-x-full w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-white hover:text-white transition-all duration-200 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50 rounded-full cursor-pointer bg-black/30 backdrop-blur-sm shadow-lg"
             aria-label="Next image"
           >
             <svg

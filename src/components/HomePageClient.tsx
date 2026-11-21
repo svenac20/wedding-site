@@ -60,7 +60,7 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
     { name: "Home", href: "#home" },
     { name: "Raspored", href: "#raspored" },
     { name: "Potvrdite Dolazak", href: "#rsvp" },
-    { name: "Kontakt", href: "#kontakt" },
+    { name: "Kontakt", href: "#contact" },
   ];
 
   return (
@@ -76,7 +76,7 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Desktop Navigation */}
-            <ul className="hidden lg:flex items-center justify-center flex-1 space-x-8">
+            <ul className="hidden lg:flex items-center justify-center flex-1 gap-20 xl:gap-28">
               {navLinks.map((link) => (
                 <li key={link.name}>
                   <Link
@@ -124,7 +124,7 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
           {/* Mobile Navigation */}
           {mobileMenuOpen && (
             <div className="lg:hidden py-4 border-t border-[#304254]/10">
-              <ul className="flex flex-col space-y-4">
+              <ul className="flex flex-col space-y-8">
                 {navLinks.map((link) => (
                   <li key={link.name}>
                     <Link
@@ -150,11 +150,12 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/home-page/hero.jpg"
+            src="/home-page/hero-full.jpg"
             alt="Tina i Sven"
             fill
             sizes="100vw"
-            className="object-cover object-[center_25%]"
+            quality={90}
+            className="object-cover object-[65%_15%] lg:object-[center_15%]"
             priority
           />
           <div className="absolute inset-0 bg-black/40" />
@@ -230,7 +231,7 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
         id="about"
         className="relative py-20 md:py-32 bg-[#b2d6e9]"
       >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl lg:max-w-7xl xl:max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-16">
           {/* Section Title */}
           <h2
             className="scroll-reveal fade-up text-white text-4xl sm:text-5xl md:text-6xl font-normal uppercase tracking-wide text-center mb-4"
@@ -248,7 +249,7 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
           </p>
 
           {/* Content Grid */}
-          <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+          <div className="grid md:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
             {/* Text Content */}
             <div className="scroll-reveal fade-left text-white text-center md:text-left">
               <p
@@ -292,23 +293,32 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
       {/* Countdown Section */}
       <section
         id="countdown"
-        className="relative py-20 md:py-32 bg-[#737373]"
+        className="relative flex items-center justify-center min-h-[28rem] md:min-h-[60vw] lg:min-h-0 lg:h-[75vh] py-20 md:py-32 lg:py-12 bg-[#737373]"
       >
         {/* Background Image */}
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-0 overflow-hidden">
           <div className="relative w-full h-full opacity-50">
             <Image
-                src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80"
-                alt="Background"
+                src="/home-page/countdown-couple.jpg"
+                alt=""
                 fill
                 sizes="100vw"
-                className="object-cover object-center"
+                quality={90}
+                className="hidden lg:block object-cover blur-xl scale-105"
+            />
+            <Image
+                src="/home-page/countdown-couple.jpg"
+                alt="Tina i Sven uz noćni pogled na grad"
+                fill
+                sizes="100vw"
+                quality={90}
+                className="object-cover object-[60%_50%] lg:object-contain lg:object-center"
                 priority
             />
           </div>
         </div>
 
-        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           {/* Title */}
           <h2
             className="scroll-reveal fade-up text-[#f9f7f8] text-3xl sm:text-4xl md:text-5xl font-normal mb-12"
@@ -318,37 +328,37 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
           </h2>
 
           {/* Countdown Timer */}
-          <div className="scroll-reveal fade-in inline-block bg-white/20 backdrop-blur-sm rounded-full px-8 sm:px-16 py-8">
-            <div className="flex items-center justify-center space-x-4 sm:space-x-8">
+          <div className="scroll-reveal fade-in inline-block bg-white/20 backdrop-blur-sm rounded-full px-4 sm:px-16 py-8">
+            <div className="flex items-center justify-center space-x-1 sm:space-x-8">
               <div className="text-center">
-                <div className="text-white text-4xl sm:text-5xl md:text-6xl font-light">
+                <div className="text-white text-3xl sm:text-5xl md:text-6xl font-light">
                   {countdown.days.toString().padStart(2, "0")}
                 </div>
                 <div className="text-white/80 text-xs sm:text-sm uppercase tracking-wider mt-2">
                   Dana
                 </div>
               </div>
-              <div className="text-white text-3xl">:</div>
+              <div className="text-white text-xl sm:text-3xl">:</div>
               <div className="text-center">
-                <div className="text-white text-4xl sm:text-5xl md:text-6xl font-light">
+                <div className="text-white text-3xl sm:text-5xl md:text-6xl font-light">
                   {countdown.hours.toString().padStart(2, "0")}
                 </div>
                 <div className="text-white/80 text-xs sm:text-sm uppercase tracking-wider mt-2">
                   Sati
                 </div>
               </div>
-              <div className="text-white text-3xl">:</div>
+              <div className="text-white text-xl sm:text-3xl">:</div>
               <div className="text-center">
-                <div className="text-white text-4xl sm:text-5xl md:text-6xl font-light">
+                <div className="text-white text-3xl sm:text-5xl md:text-6xl font-light">
                   {countdown.minutes.toString().padStart(2, "0")}
                 </div>
                 <div className="text-white/80 text-xs sm:text-sm uppercase tracking-wider mt-2">
                   Minuta
                 </div>
               </div>
-              <div className="text-white text-3xl">:</div>
+              <div className="text-white text-xl sm:text-3xl">:</div>
               <div className="text-center">
-                <div className="text-white text-4xl sm:text-5xl md:text-6xl font-light">
+                <div className="text-white text-3xl sm:text-5xl md:text-6xl font-light">
                   {countdown.seconds.toString().padStart(2, "0")}
                 </div>
                 <div className="text-white/80 text-xs sm:text-sm uppercase tracking-wider mt-2">
@@ -368,7 +378,7 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Title */}
           <h2
-            className="scroll-reveal fade-up text-[#a6aec4] text-4xl sm:text-5xl md:text-6xl font-normal uppercase tracking-wide text-center mb-16"
+            className="scroll-reveal fade-up text-[#304254] text-4xl sm:text-5xl md:text-6xl font-normal uppercase tracking-wide text-center mb-16"
             style={{ fontFamily: "var(--font-cormorant)" }}
           >
             Detalji vjenčanja
@@ -393,13 +403,13 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
                 />
               </div>
               <p
-                className="text-[#a6aec4] text-2xl sm:text-3xl font-bold mb-2"
+                className="text-[#304254] text-4xl md:text-5xl font-bold mb-3"
                 style={{ fontFamily: "var(--font-cormorant)" }}
               >
                 17:00
               </p>
               <p
-                className="text-[#a6aec4] text-sm sm:text-base"
+                className="text-[#304254] text-lg md:text-xl font-medium leading-relaxed"
                 style={{ fontFamily: "var(--font-montserrat)" }}
               >
                 {CEREMONY_VENUE}
@@ -423,13 +433,13 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
                 />
               </div>
               <p
-                className="text-[#a6aec4] text-2xl sm:text-3xl font-bold mb-2"
+                className="text-[#304254] text-4xl md:text-5xl font-bold mb-3"
                 style={{ fontFamily: "var(--font-cormorant)" }}
               >
                 18:00
               </p>
               <p
-                className="text-[#a6aec4] text-sm sm:text-base"
+                className="text-[#304254] text-lg md:text-xl font-medium leading-relaxed"
                 style={{ fontFamily: "var(--font-montserrat)" }}
               >
                 Okupljanje ispred sale
@@ -453,13 +463,13 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
                 />
               </div>
               <p
-                className="text-[#a6aec4] text-2xl sm:text-3xl font-bold mb-2"
+                className="text-[#304254] text-4xl md:text-5xl font-bold mb-3"
                 style={{ fontFamily: "var(--font-cormorant)" }}
               >
                 19:00
               </p>
               <p
-                className="text-[#a6aec4] text-sm sm:text-base"
+                className="text-[#304254] text-lg md:text-xl font-medium leading-relaxed"
                 style={{ fontFamily: "var(--font-montserrat)" }}
               >
                 Večera i zabava
@@ -492,7 +502,7 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 md:py-32 bg-[#b2d6e9]">
+      <section id="contact" className="scroll-mt-16 py-20 md:py-32 bg-[#b2d6e9]">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2
             className="scroll-reveal fade-up text-[#304254] text-4xl sm:text-5xl md:text-6xl font-normal uppercase tracking-wide mb-4"

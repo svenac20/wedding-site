@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   output: "standalone",
   images: {
+    qualities: [75, 90],
     remotePatterns: [
       {
         protocol: "https",
