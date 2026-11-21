@@ -2,12 +2,13 @@ import ImageCarousel from "./ImageCarousel";
 
 // List of images in the public/home-page folder
 const homePageImages = [
+  "/home-page/sunset-couple.jpg",
   "/home-page/cave.jpg",
   "/home-page/plitvice.jpg",
   "/home-page/prague-funny.jpg",
   "/home-page/vienna-concert.jpg",
   "/home-page/vienna.jpg",
-  "/home-page/wedding.jpg",
+  "/home-page/museum-couple.jpg",
 ];
 
 export default function HomePageCarousel() {

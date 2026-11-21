@@ -16,6 +16,24 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Local database with Podman
+
+For the existing local database, run these commands in PowerShell:
+
+```powershell
+podman machine start
+podman start wedding-site-mysql
+podman ps --filter name=wedding-site-mysql
+```
+
+Skip `podman machine start` if the machine is already running. MySQL is available
+at `localhost:3307`, using the `wedding_db` database. Keep `DATABASE_URL` in your
+local `.env` pointed at that host, port, and database.
+
+To stop just the database, run `podman stop wedding-site-mysql`. Starting and
+stopping the existing container preserves its database volume; do not remove the
+volume if you want to keep your local data.
+
 ## RSVP confirmation emails
 
 Set `AZURE_COMMUNICATION_CONNECTION_STRING` and `EMAIL_SENDER_ADDRESS` in your

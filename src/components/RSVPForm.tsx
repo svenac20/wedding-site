@@ -13,6 +13,7 @@ interface Guest {
 const DRINK_OPTIONS = [
   { value: "aperol_spritz", label: "Aperol Spritz" },
   { value: "wine_white", label: "Bijelo vino" },
+  { value: "brandy", label: "Brandy" },
   { value: "cognac", label: "Cognac" },
   { value: "cosmopolitan", label: "Cosmopolitan" },
   { value: "wine_red", label: "Crno vino" },
@@ -24,7 +25,7 @@ const DRINK_OPTIONS = [
   { value: "martini", label: "Martini" },
   { value: "mojito", label: "Mojito" },
   { value: "prosecco", label: "Prosecco" },
-  { value: "brandy", label: "Rakija / Brandy" },
+  { value: "rakija", label: "Rakija" },
   { value: "wine_rose", label: "Rose vino" },
   { value: "rum", label: "Rum" },
   { value: "champagne", label: "Šampanjac" },

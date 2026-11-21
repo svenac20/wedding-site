@@ -150,14 +150,14 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
-            alt="Background image main"
+            src="/home-page/hero.jpg"
+            alt="Tina i Sven"
             fill
             sizes="100vw"
-            className="object-cover object-center"
+            className="object-cover object-[center_25%]"
             priority
           />
-          <div className="absolute inset-0 bg-black/20" />
+          <div className="absolute inset-0 bg-black/40" />
         </div>
 
         {/* Hero Content */}
@@ -375,69 +375,18 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
           </h2>
 
           {/* Details Grid */}
-          <div className="scroll-reveal fade-up grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+          <div className="scroll-reveal fade-up grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-12">
             {/* Detail Card 1 */}
-            <div className="text-center">
+            <a
+              href="https://maps.app.goo.gl/zxj43tTPM42vWSAg8"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-center rounded-lg hover:opacity-80 transition-opacity focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#304254]"
+            >
               <div className="w-36 h-48 mx-auto mb-6 relative rounded-lg shadow-lg overflow-hidden">
                 <Image
-                  src="https://images.unsplash.com/photo-1469371670807-013ccf25f16a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-                  alt="Dolazak gostiju"
-                  fill
-                  sizes="144px"
-                  className="object-cover object-center"
-                />
-              </div>
-              <p
-                className="text-[#a6aec4] text-2xl sm:text-3xl font-bold mb-2"
-                style={{ fontFamily: "var(--font-cormorant)" }}
-              >
-                14:00
-              </p>
-              <p
-                className="text-[#a6aec4] text-sm sm:text-base"
-                style={{ fontFamily: "var(--font-montserrat)" }}
-              >
-                Dolazak gostiju
-              </p>
-            </div>
-
-            {/* Detail Card 2 */}
-            <div className="text-center">
-              <div className="w-36 h-48 mx-auto mb-6 relative rounded-lg shadow-lg overflow-hidden">
-                <Image
-                  src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-                  alt="Ceremonija"
-                  fill
-                  sizes="144px"
-                  className="object-cover object-center"
-                />
-              </div>
-              <p
-                className="text-[#a6aec4] text-2xl sm:text-3xl font-bold mb-2"
-                style={{ fontFamily: "var(--font-cormorant)" }}
-              >
-                15:00
-              </p>
-              <p
-                className="text-[#a6aec4] text-sm sm:text-base"
-                style={{ fontFamily: "var(--font-montserrat)" }}
-              >
-                Ceremonija
-              </p>
-              <p
-                className="text-[#a6aec4] text-sm sm:text-base mt-2"
-                style={{ fontFamily: "var(--font-montserrat)" }}
-              >
-                {CEREMONY_VENUE}
-              </p>
-            </div>
-
-            {/* Detail Card 3 */}
-            <div className="text-center">
-              <div className="w-36 h-48 mx-auto mb-6 relative rounded-lg shadow-lg overflow-hidden">
-                <Image
-                  src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-                  alt="Koktel"
+                  src="/home-page/church.png"
+                  alt={CEREMONY_VENUE}
                   fill
                   sizes="144px"
                   className="object-cover object-center"
@@ -453,16 +402,51 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
                 className="text-[#a6aec4] text-sm sm:text-base"
                 style={{ fontFamily: "var(--font-montserrat)" }}
               >
-                Koktel
+                {CEREMONY_VENUE}
               </p>
-            </div>
+            </a>
 
-            {/* Detail Card 4 */}
-            <div className="text-center">
+            {/* Detail Card 2 */}
+            <a
+              href="https://maps.app.goo.gl/JwHTy1v1sxXmFYTP7"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-center rounded-lg hover:opacity-80 transition-opacity focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#304254]"
+            >
               <div className="w-36 h-48 mx-auto mb-6 relative rounded-lg shadow-lg overflow-hidden">
                 <Image
-                  src="https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-                  alt="Večera i zabava"
+                  src="/home-page/venue-gathering.png"
+                  alt="Okupljanje ispred sale"
+                  fill
+                  sizes="144px"
+                  className="object-cover object-center"
+                />
+              </div>
+              <p
+                className="text-[#a6aec4] text-2xl sm:text-3xl font-bold mb-2"
+                style={{ fontFamily: "var(--font-cormorant)" }}
+              >
+                18:00
+              </p>
+              <p
+                className="text-[#a6aec4] text-sm sm:text-base"
+                style={{ fontFamily: "var(--font-montserrat)" }}
+              >
+                Okupljanje ispred sale
+              </p>
+            </a>
+
+            {/* Detail Card 3 */}
+            <a
+              href="https://maps.app.goo.gl/JwHTy1v1sxXmFYTP7"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-center rounded-lg hover:opacity-80 transition-opacity focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#304254]"
+            >
+              <div className="w-36 h-48 mx-auto mb-6 relative rounded-lg shadow-lg overflow-hidden">
+                <Image
+                  src="/home-page/mansion.png"
+                  alt="Mansion - večera i zabava"
                   fill
                   sizes="144px"
                   className="object-cover object-center"
@@ -480,7 +464,7 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
               >
                 Večera i zabava
               </p>
-            </div>
+            </a>
           </div>
         </div>
       </section>
@@ -591,24 +575,6 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-black text-white py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-center">
-            <div className="text-sm">
-              Made with ❤️ for Tina & Sven
-            </div>
-            <a
-              href="https://icons8.com"
-              className="text-sm underline underline-offset-2"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Favicon by Icons8
-            </a>
-          </div>
-        </div>
-      </footer>
     </main>
   );
 }
