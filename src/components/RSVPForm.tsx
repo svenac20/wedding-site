@@ -738,11 +738,19 @@ export default function RSVPForm() {
                       <input
                         type="email"
                         value={guestDetail.email}
+                        aria-describedby={`guest-email-hint-${guestId}`}
                         onChange={(e) => updateGuestDetail(guestId, "email", e.target.value)}
                         className="w-full px-4 py-3 rounded-lg border border-[#304254]/20 bg-white text-[#304254] focus:outline-none focus:ring-2 focus:ring-[#a0bdca] focus:border-transparent transition-all"
                         style={{ fontFamily: "var(--font-montserrat)" }}
                         placeholder="email@primjer.com"
                       />
+                      <p
+                        id={`guest-email-hint-${guestId}`}
+                        className="mt-2 rounded-lg bg-[#deebf0] px-3 py-2 text-sm leading-relaxed text-[#304254]"
+                        style={{ fontFamily: "var(--font-montserrat)" }}
+                      >
+                        Ostavite prazno ako želite potvrde za sve osobe na istu email adresu
+                      </p>
                     </div>
                   </div>
                 );

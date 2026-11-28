@@ -256,29 +256,32 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
                 className="text-lg md:text-xl leading-relaxed mb-6"
                 style={{ fontFamily: "var(--font-montserrat)" }}
               >
-                Lorem ipsum dolor sit amet,
+                Na zapadu Zagreba okruženi obitelji i prijateljima, odrastali smo u pametne ljude.
               </p>
               <p
                 className="text-lg md:text-xl leading-relaxed mb-6"
                 style={{ fontFamily: "var(--font-montserrat)" }}
               >
-                consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                Škole su nas naučile matematici, informatici, biologiji i jezicima.
+                Sven bi rekao da su nas spojili prijatelji koji su iste škole učile šalabahterima i prepisivanju.
               </p>
               <p
                 className="text-lg md:text-xl leading-relaxed mb-6"
                 style={{ fontFamily: "var(--font-montserrat)" }}
               >
-                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                fugiat nulla pariatur.
+                Tina bi rekla da su ih te škole naučile njezi kose po kojoj ju je prepoznao.
+              </p>
+              <p
+                className="text-lg md:text-xl leading-relaxed mb-6"
+                style={{ fontFamily: "var(--font-montserrat)" }}
+              >
+                Ali nije nas škola naučila ljubavi, nego baš vi, naši ljudi.
               </p>
               <p
                 className="text-lg md:text-xl leading-relaxed"
                 style={{ fontFamily: "var(--font-montserrat)" }}
               >
-                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-                deserunt mollit anim id est laborum.
+                Stoga vas pozivamo na proslavu diplome naše ljubavi, vjenčanje.
               </p>
             </div>
 
@@ -382,6 +385,12 @@ export default function HomePageClient({ carouselSlot }: HomePageClientProps) {
             style={{ fontFamily: "var(--font-cormorant)" }}
           >
             Detalji vjenčanja
+            <span
+              className="block lg:inline-block lg:ml-4 text-2xl sm:text-3xl md:text-4xl font-medium normal-case tracking-normal mt-3 lg:mt-0"
+              style={{ fontFamily: "var(--font-montserrat)" }}
+            >
+              1. svibnja 2027.
+            </span>
           </h2>
 
           {/* Details Grid */}
